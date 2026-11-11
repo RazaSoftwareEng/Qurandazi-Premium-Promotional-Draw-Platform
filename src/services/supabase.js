@@ -75,7 +75,14 @@ export const supabase = createClient(
   },
 )
 
-export const SITE_URL = (import.meta.env.VITE_SITE_URL || window.location.origin).replace(/\/$/, '')
+// Auth emails (verification, password reset) must link back to the site the user is
+// actually on. A localhost VITE_SITE_URL baked into a production build would send
+// users to localhost, so the live origin wins unless we are running locally.
+const envSiteUrl = (import.meta.env.VITE_SITE_URL || '').replace(/\/$/, '')
+const isLocalOrigin = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(window.location.origin)
+export const SITE_URL = (
+  envSiteUrl && !/localhost|127\.0\.0\.1/.test(envSiteUrl) ? envSiteUrl : isLocalOrigin ? envSiteUrl || window.location.origin : window.location.origin
+).replace(/\/$/, '')
 
 /** Throws a normalized Error if a Supabase response contains an error. */
 export function unwrap({ data, error, count }) {

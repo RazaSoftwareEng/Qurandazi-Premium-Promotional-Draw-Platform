@@ -14,6 +14,7 @@ export const DEPOSIT_STATUS = {
 }
 
 export const PAYMENT_METHODS = [
+  { value: 'mobile_wallet', label: 'Mobile wallet (EasyPaisa / JazzCash / NayaPay / SadaPay)' },
   { value: 'bank_transfer', label: 'Bank transfer' },
   { value: 'payment_gateway', label: 'Payment gateway' },
 ]

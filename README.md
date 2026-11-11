@@ -31,6 +31,7 @@ If the env vars are missing, the app still renders and shows a yellow "Supabase 
    - `supabase/migrations/20260101000003_rls.sql`
    - `supabase/migrations/20260101000004_storage.sql`
    - `supabase/migrations/20260101000005_deposits_kyc.sql` (KYC, deposits, deposit-gated entries, prize handovers and the private storage buckets)
+   - `supabase/migrations/20260101000006_wallet_payments_open_deposits.sql` (mobile-wallet payments; deposits can be submitted before KYC is complete)
    - `supabase/seed.sql` (adds the Grande / Alto / 125 categories, three sample campaigns and the site settings)
 
    With the Supabase CLI you can run `supabase link` and then `supabase db push` instead, followed by `psql … -f supabase/seed.sql`.

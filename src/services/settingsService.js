@@ -18,6 +18,8 @@ export const DEFAULT_SETTINGS = {
   deposit_terms: {
     version: 'v1',
     allow_early_withdrawal: false,
+    wallet_providers: 'EasyPaisa / JazzCash / NayaPay / SadaPay',
+    wallet_number: '03003209005',
     bank_name: '',
     account_title: '',
     account_number: '',

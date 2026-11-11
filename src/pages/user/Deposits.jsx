@@ -34,6 +34,7 @@ function TermsText({ text }) {
 
 function PaymentDetails({ terms }) {
   const rows = [
+    [terms.wallet_providers || 'Mobile wallet', terms.wallet_number],
     ['Bank', terms.bank_name],
     ['Account title', terms.account_title],
     ['Account number', terms.account_number],
@@ -63,7 +64,7 @@ function DepositWizard({ category, onClose, onDone }) {
   const terms = settings.deposit_terms || {}
   const [step, setStep] = useState(1)
   const [accepted, setAccepted] = useState(false)
-  const [values, setValues] = useState({ method: 'bank_transfer', txn: '', proof: null })
+  const [values, setValues] = useState({ method: 'mobile_wallet', txn: '', proof: null })
   const [errors, setErrors] = useState({})
   const [busy, setBusy] = useState(false)
 
@@ -149,7 +150,7 @@ function DepositWizard({ category, onClose, onDone }) {
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <Select label="Payment method" required value={values.method} onChange={(e) => setValues((v) => ({ ...v, method: e.target.value }))} options={PAYMENT_METHODS} error={errors.method} />
-            <FormInput label="Transaction ID" required placeholder="e.g. FT2611110012345" value={values.txn} maxLength={100} onChange={(e) => setValues((v) => ({ ...v, txn: e.target.value }))} error={errors.txn} />
+            <FormInput label="Transaction ID" required placeholder="e.g. 41234567890 (TID from SMS / receipt)" value={values.txn} maxLength={100} onChange={(e) => setValues((v) => ({ ...v, txn: e.target.value }))} error={errors.txn} />
             <div className="sm:col-span-2">
               <PrivateUpload
                 label="Payment proof (recommended)"
@@ -289,10 +290,9 @@ export default function Deposits() {
       <PageHeader title="My Deposits" description="A verified, refundable deposit makes you eligible for campaigns in its category and every lower category." />
 
       {!kycVerified && (
-        <Alert tone="warning" icon={IdCard} title="Verify your identity first" className="mb-6">
-          Only KYC-verified members can make deposits.{' '}
-          {profile?.kyc_status === 'pending' ? 'Your CNIC is under review — we will notify you once it is verified.' : 'Submit your CNIC from your profile.'}
-          {profile?.kyc_status !== 'pending' && <div className="mt-2"><Button to="/dashboard/profile" size="sm" variant="navy">Go to my profile</Button></div>}
+        <Alert tone="info" icon={IdCard} title={profile?.kyc_status === 'pending' ? 'Your CNIC is under review' : 'CNIC verification is still needed'} className="mb-6">
+          You can pay and submit your deposit now. It will wait for admin approval. To join campaigns you will also need a verified email and a KYC-verified CNIC.
+          {profile?.kyc_status !== 'pending' && <div className="mt-2"><Button to="/dashboard/profile" size="sm" variant="navy">Verify my CNIC</Button></div>}
         </Alert>
       )}
 
@@ -326,7 +326,7 @@ export default function Deposits() {
                 <Button
                   className="mt-4 w-full"
                   variant={open ? 'outline' : 'primary'}
-                  disabled={!kycVerified || Boolean(open)}
+                  disabled={Boolean(open)}
                   onClick={() => setDepositFor(c)}
                 >
                   {open ? 'Deposit already open' : `Deposit ${formatPKR(c.deposit_amount)}`}

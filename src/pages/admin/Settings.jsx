@@ -39,6 +39,8 @@ const FIELDS = {
   deposit_terms: [
     { key: 'version', label: 'Terms version', placeholder: 'v1', help: 'Recorded on every new deposit. Change it (e.g. v2) whenever you change the terms below.', validators: [rules.required(), rules.max(20)] },
     { key: 'allow_early_withdrawal', label: 'Allow withdrawal before the lock-in period ends', description: 'If on, members can request a refund at any time.', type: 'toggle' },
+    { key: 'wallet_providers', label: 'Mobile wallets accepted', placeholder: 'EasyPaisa / JazzCash / NayaPay / SadaPay', validators: [rules.max(120)] },
+    { key: 'wallet_number', label: 'Wallet account number', placeholder: '03003209005', help: 'Shown to members as the number to send their deposit to.', validators: [(v) => (!v || /^03\d{9}$/.test(String(v).replace(/[\s-]/g, '')) ? null : 'Enter an 11-digit mobile number, e.g. 03003209005')] },
     { key: 'bank_name', label: 'Bank name', placeholder: 'e.g. Meezan Bank', validators: [rules.max(80)] },
     { key: 'account_title', label: 'Account title (company name)', placeholder: 'e.g. Qurandazi (Pvt) Ltd', validators: [rules.max(120)] },
     { key: 'account_number', label: 'Account number', validators: [rules.max(40)] },
