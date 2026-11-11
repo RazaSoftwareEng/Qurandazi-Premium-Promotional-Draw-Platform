@@ -49,7 +49,7 @@ export default function Campaigns() {
 
   return (
     <>
-      <PublicHero eyebrow="Campaigns" title="Promotional campaigns" subtitle="Every campaign is free to join. Choose a category, check the dates and eligibility, and take your chance." />
+      <PublicHero eyebrow="Campaigns" title="Promotional campaigns" subtitle="Choose a category, check the dates and deposit requirement, and take your chance. No entry fee is charged." />
       <section className="container-page py-12">
         <div className="card mb-8 grid gap-3 p-4 md:grid-cols-[1fr_220px_220px]">
           <SearchInput value={search} onChange={setSearch} placeholder="Search campaigns…" />

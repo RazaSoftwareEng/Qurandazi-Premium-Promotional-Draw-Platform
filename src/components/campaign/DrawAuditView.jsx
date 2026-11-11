@@ -65,7 +65,10 @@ export default function DrawAuditView({ audit, showStaff = false }) {
 
         <section className="card p-6">
           <h2 className="flex items-center gap-2 text-lg font-bold text-navy-900"><Fingerprint className="h-5 w-5 text-gold-600" /> Frozen entry snapshot</h2>
-          <p className="mt-1 text-sm text-ink-muted">{formatNumber(snapshot.length)} eligible entries, ordered by entry time.</p>
+          <p className="mt-1 text-sm text-ink-muted">
+            {formatNumber(snapshot.length)} eligible entries, ordered by entry time.
+            {Number(draw.required_deposit) > 0 && <> Only entries with a deposit of PKR {formatNumber(draw.required_deposit)} or more still active at closing were included{draw.excluded_entries > 0 ? ` (${formatNumber(draw.excluded_entries)} excluded)` : ''}.</>}
+          </p>
           <div className="mt-4 max-h-80 overflow-y-auto rounded-xl border border-ivory-200 scrollbar-thin">
             <table className="table-qz">
               <thead><tr><th>Position</th><th>Entry reference</th></tr></thead>

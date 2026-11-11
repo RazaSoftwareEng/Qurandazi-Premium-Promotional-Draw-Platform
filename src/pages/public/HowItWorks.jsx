@@ -19,7 +19,7 @@ export default function HowItWorks() {
       <PublicHero eyebrow="How it works" title="Simple to join. Impossible to fix." subtitle="Participation takes a minute. Fairness is guaranteed by mathematics and enforced by the database." />
       <section className="container-page py-16">
         <h2 className="section-title">For participants</h2>
-        <ol className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <ol className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {STEPS.map((s, i) => (
             <li key={s.title} className="card p-6">
               <div className="flex items-center gap-3">
@@ -63,7 +63,7 @@ export default function HowItWorks() {
           ))}
         </div>
         <div className="mt-10 flex flex-wrap justify-center gap-3">
-          <Button to="/register" size="lg">Create free account</Button>
+          <Button to="/register" size="lg">Create an account</Button>
           <Button to="/winners" variant="outline" size="lg" iconRight={ArrowRight}>See a published audit</Button>
         </div>
       </section>

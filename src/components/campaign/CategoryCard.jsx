@@ -35,7 +35,7 @@ export default function CategoryCard({ category, index = 0 }) {
             0{index + 1}
           </span>
           <span className="inline-flex items-center gap-1 rounded-full bg-gold-500 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-navy-900 shadow">
-            <ShieldCheck className="h-3 w-3" /> Free entry
+            <ShieldCheck className="h-3 w-3" /> {Number(category.deposit_amount) > 0 ? 'Refundable deposit' : 'Open entry'}
           </span>
         </div>
 
@@ -52,13 +52,13 @@ export default function CategoryCard({ category, index = 0 }) {
         )}
 
         <div className="mt-auto pt-6">
-          {category.reference_amount != null && (
+          {Number(category.deposit_amount) > 0 && (
             <div className="flex items-center justify-between gap-3 rounded-xl bg-white/[0.04] px-4 py-3 ring-1 ring-white/10">
               <div className="min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">Reference value</p>
-                <p className="mt-0.5 text-lg font-extrabold tabular-nums text-white">{formatPKR(category.reference_amount)}</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">Required deposit</p>
+                <p className="mt-0.5 text-lg font-extrabold tabular-nums text-white">{formatPKR(category.deposit_amount)}</p>
               </div>
-              <p className="max-w-[9rem] text-right text-[11px] leading-4 text-white/45">Informational only — not an entry fee</p>
+              <p className="max-w-[9rem] text-right text-[11px] leading-4 text-white/45">Refundable, not a fee · {category.deposit_lock_in_days}-day lock-in</p>
             </div>
           )}
 

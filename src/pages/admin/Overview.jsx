@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import { Activity, CheckCircle2, ClipboardList, Gift, Hourglass, Inbox, UserCheck, Users } from 'lucide-react'
+import { Activity, Banknote, CheckCircle2, ClipboardList, Gift, Hourglass, IdCard, Inbox, Undo2, UserCheck, Users, Wallet } from 'lucide-react'
 import { Alert, Avatar, EmptyState, ErrorState, Select, Skeleton, StatCard } from '@/components/ui'
 import PageHeader from '@/components/layout/PageHeader'
 import { useAsync } from '@/hooks/useAsync'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { adminService } from '@/services/adminService'
-import { formatRelative } from '@/utils/format'
+import { formatPKR, formatRelative } from '@/utils/format'
 
 const axis = { fontSize: 11, fill: '#6B7385' }
 const tooltipStyle = { borderRadius: 12, border: '1px solid #E3DDCC', fontSize: 12 }
@@ -49,12 +49,20 @@ export default function AdminOverview() {
           <Link to="/admin/draws" className="font-semibold underline">Review draws</Link>
         </Alert>
       )}
+      {(s.pending_kyc > 0 || s.pending_deposits > 0 || s.pending_withdrawals > 0) && (
+        <div className="mb-6 grid gap-3 md:grid-cols-3">
+          {s.pending_kyc > 0 && <Alert tone="warning" icon={IdCard} title={`${s.pending_kyc} CNIC submission(s) to review`}><Link to="/admin/kyc" className="font-semibold underline">Open KYC Reviews</Link></Alert>}
+          {s.pending_deposits > 0 && <Alert tone="warning" icon={Banknote} title={`${s.pending_deposits} deposit(s) awaiting verification`}><Link to="/admin/deposits" className="font-semibold underline">Verify deposits</Link></Alert>}
+          {s.pending_withdrawals > 0 && <Alert tone="info" icon={Undo2} title={`${s.pending_withdrawals} withdrawal request(s)`}><Link to="/admin/deposits" className="font-semibold underline">Process refunds</Link></Alert>}
+        </div>
+      )}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <StatCard label="Registered users" value={s.total_users} icon={Users} loading={stats.loading} accent />
         <StatCard label="Active users" value={s.active_users} icon={UserCheck} loading={stats.loading} hint={`${s.active_30d ?? 0} signed in last 30 days · ${s.suspended_users ?? 0} suspended`} />
         <StatCard label="Total campaigns" value={s.total_campaigns} icon={Gift} loading={stats.loading} />
         <StatCard label="Active campaigns" value={s.active_campaigns} icon={Activity} loading={stats.loading} />
-        <StatCard label="Total free entries" value={s.total_entries} icon={ClipboardList} loading={stats.loading} />
+        <StatCard label="Total entries" value={s.total_entries} icon={ClipboardList} loading={stats.loading} />
+        <StatCard label="Active deposits" value={s.active_deposits} icon={Wallet} loading={stats.loading} hint={`${formatPKR(s.active_deposit_total)} held · ${s.kyc_verified ?? 0} KYC-verified members`} />
         <StatCard label="Completed draws" value={s.completed_draws} icon={CheckCircle2} loading={stats.loading} hint={s.unread_messages ? `${s.unread_messages} new contact message(s)` : undefined} />
       </div>
 

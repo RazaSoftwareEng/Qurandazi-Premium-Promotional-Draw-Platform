@@ -12,7 +12,7 @@ import { downloadCSV } from '@/utils/csv'
 import { formatDateTime } from '@/utils/format'
 import { getErrorMessage } from '@/utils/errors'
 
-const GROUPS = ['draw', 'entry', 'user', 'campaigns', 'categories', 'profiles', 'site_settings', 'announcement', 'report', 'eligibility_rules', 'contact_messages']
+const GROUPS = ['deposit', 'kyc', 'handover', 'draw', 'entry', 'user', 'campaigns', 'categories', 'profiles', 'site_settings', 'announcement', 'report', 'eligibility_rules', 'contact_messages']
 
 export default function ActivityLogs() {
   useDocumentTitle('Activity Logs')
@@ -48,11 +48,11 @@ export default function ActivityLogs() {
 
   return (
     <>
-      <PageHeader title="Activity Logs" description="Append-only record of every sensitive administrative action. Entries cannot be edited or deleted." actions={<Button variant="outline" icon={Download} onClick={exportCsv} loading={exporting}>Export CSV</Button>} />
+      <PageHeader title="Activity Logs" description="Append-only record of every sensitive action: admin decisions, KYC and deposit events, withdrawals, refunds, draws and handovers. Records can't be edited or deleted." actions={<Button variant="outline" icon={Download} onClick={exportCsv} loading={exporting}>Export CSV</Button>} />
       <DataTable
         columns={[
           { key: 'created_at', header: 'Timestamp', render: (l) => <span className="whitespace-nowrap text-xs">{formatDateTime(l.created_at)}</span> },
-          { key: 'admin', header: 'Administrator', render: (l) => <div><p className="font-semibold text-navy-900">{l.admin_name || '—'}</p><p className="text-xs text-ink-muted">{l.admin_email}</p></div> },
+          { key: 'admin', header: 'Actor', render: (l) => <div><p className="font-semibold text-navy-900">{l.admin_name || '—'}</p><p className="text-xs text-ink-muted">{l.admin_email}</p></div> },
           { key: 'action', header: 'Action', render: (l) => <span className="rounded-md bg-navy-900 px-2 py-0.5 font-mono text-[11px] text-gold-400">{l.action}</span> },
           { key: 'entity', header: 'Affected record', render: (l) => <span className="font-mono text-xs">{l.entity_type}{l.entity_id ? ` · ${l.entity_id.slice(0, 8)}` : ''}</span> },
         ]}
@@ -67,7 +67,7 @@ export default function ActivityLogs() {
         onRowClick={setDetail}
         toolbar={
           <div className="grid gap-3 md:grid-cols-[1fr_220px]">
-            <SearchInput value={search} onChange={(v) => { setSearch(v); pg.reset() }} placeholder="Search admin, action or record ID…" />
+            <SearchInput value={search} onChange={(v) => { setSearch(v); pg.reset() }} placeholder="Search actor, action or record ID…" />
             <Select aria-label="Action group" value={action} onChange={(e) => { setAction(e.target.value); pg.reset() }} placeholder="All actions" options={GROUPS.map((g) => ({ value: g, label: g }))} />
           </div>
         }

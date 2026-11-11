@@ -92,7 +92,9 @@ export function PrivateFileLink({ path, getUrl, children = 'View', className = '
   const open = async (e) => {
     e.stopPropagation()
     // Open synchronously to avoid popup blockers, then point it at the signed URL
-    const win = window.open('', '_blank', 'noopener')
+    // ('noopener' would make window.open return null, so detach the opener manually)
+    const win = window.open('', '_blank')
+    if (win) win.opener = null
     setBusy(true)
     try {
       const url = await getUrl(path)

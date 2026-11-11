@@ -262,6 +262,13 @@ insert into public.site_settings (key, value, description) values
    ), 'Refundable deposit terms, payment details and withdrawal policy')
 on conflict (key) do nothing;
 
+-- Replace the old "no deposit" homepage copy if it was never customised
+update public.site_settings
+   set value = jsonb_set(value, '{hero_subtitle}',
+         to_jsonb('Promotional campaigns with transparent, independently verifiable draws. Your deposit is refundable, never a fee.'::text))
+ where key = 'homepage'
+   and value ->> 'hero_subtitle' = 'Free-entry promotional campaigns with transparent, independently verifiable draws. No purchase. No deposit. Just your moment.';
+
 -- ---------------------------------------------------------------------
 -- Internal helpers
 -- ---------------------------------------------------------------------

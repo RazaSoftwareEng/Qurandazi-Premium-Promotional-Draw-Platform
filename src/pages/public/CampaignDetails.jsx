@@ -39,6 +39,7 @@ export default function CampaignDetails() {
   if (!c) return <NotFound />
 
   const phase = getCampaignPhase(c)
+  const needsDeposit = Number(c.category?.deposit_amount) > 0
 
   return (
     <>
@@ -75,10 +76,16 @@ export default function CampaignDetails() {
             {c.eligibility_summary && <p className="mb-4 text-[15px] leading-7 text-ink-soft">{c.eligibility_summary}</p>}
             <ul className="space-y-2">
               <li className="flex gap-2 text-sm text-ink-soft"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" /> A registered QURANDAZI account in good standing</li>
+              {needsDeposit && (
+                <>
+                  <li className="flex gap-2 text-sm text-ink-soft"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" /> Verified email and KYC-verified identity (CNIC)</li>
+                  <li className="flex gap-2 text-sm text-ink-soft"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" /> A verified, active {c.category.name} deposit ({formatPKR(c.category.deposit_amount)}) or higher that is still active when the campaign closes</li>
+                </>
+              )}
               {c.eligibility_rules?.map((r) => (
                 <li key={r.id} className="flex gap-2 text-sm text-ink-soft"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" /> {describeRule(r)}</li>
               ))}
-              <li className="flex gap-2 text-sm text-ink-soft"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" /> One free entry per member</li>
+              <li className="flex gap-2 text-sm text-ink-soft"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" /> One entry per member</li>
             </ul>
           </Block>
           {c.rules && (
@@ -86,13 +93,18 @@ export default function CampaignDetails() {
               <p className="whitespace-pre-line text-[15px] leading-7 text-ink-soft">{c.rules}</p>
             </Block>
           )}
-          <Block icon={Gift} title="How to participate for free">
+          <Block icon={Gift} title="How to participate">
             <p className="whitespace-pre-line text-[15px] leading-7 text-ink-soft">
-              {c.participation_instructions || 'Sign in, make sure you meet the eligibility requirements, then press “Join Campaign”. Entry is completely free.'}
+              {c.participation_instructions ||
+                (needsDeposit
+                  ? 'Verify your email, complete your profile and get your CNIC verified. Then make a refundable deposit in this category or a higher one. Once the deposit is verified, press “Join Campaign”.'
+                  : 'Sign in, make sure you meet the eligibility requirements, then press “Join Campaign”.')}
             </p>
-            <p className="mt-4 rounded-xl border border-gold-500/30 bg-gold-100/40 px-4 py-3 text-sm text-navy-900">
-              <strong>Always free:</strong> no purchase, deposit or payment is required or accepted for participation.
-            </p>
+            {needsDeposit && (
+              <p className="mt-4 rounded-xl border border-gold-500/30 bg-gold-100/40 px-4 py-3 text-sm text-navy-900">
+                <strong>Requires verified deposit: {formatPKR(c.category.deposit_amount)}.</strong> The deposit is not a fee. It is refundable after a {c.category.deposit_lock_in_days}-day lock-in period, as set out in the deposit terms. If you withdraw it before this campaign closes, your entry is left out of the draw.
+              </p>
+            )}
           </Block>
         </div>
 
@@ -118,9 +130,10 @@ export default function CampaignDetails() {
                   <p className="mt-1 font-bold text-navy-900">{c.prize_description}</p>
                 </div>
               )}
-              {c.category?.reference_amount != null && (
-                <div className="px-5 py-4 text-xs text-ink-muted">
-                  {c.category.name} {c.category.reference_label?.toLowerCase()}: {formatPKR(c.category.reference_amount)} — informational only, not an entry requirement.
+              {needsDeposit && (
+                <div className="px-5 py-4 text-sm">
+                  <p className="text-ink-muted">Required deposit</p>
+                  <p className="mt-1 font-bold text-navy-900">{formatPKR(c.category.deposit_amount)} · refundable</p>
                 </div>
               )}
             </div>

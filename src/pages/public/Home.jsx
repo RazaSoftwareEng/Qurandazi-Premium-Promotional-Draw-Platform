@@ -72,7 +72,7 @@ export default function Home() {
               </p>
             )}
             <p className="eyebrow-dark">
-              <span className="gold-rule" /> Free-entry promotional draws
+              <span className="gold-rule" /> Verifiable promotional draws
             </p>
             <h1 className="mt-5 font-display text-5xl font-semibold leading-[1.02] text-white sm:text-7xl">
               {settings.homepage.hero_title.split('.').filter(Boolean).length > 1 ? (
@@ -95,7 +95,7 @@ export default function Home() {
               </Button>
             </div>
             <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/60">
-              <span className="inline-flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-gold-400" /> No purchase necessary</span>
+              <span className="inline-flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-gold-400" /> Refundable deposits, no entry fee</span>
               <span className="inline-flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-gold-400" /> Publicly verifiable results</span>
             </div>
           </div>
@@ -161,8 +161,8 @@ export default function Home() {
 
       {/* How it works */}
       <section className="container-page py-20">
-        <SectionHead eyebrow="How it works" title="Four steps to your moment" action={<Button to="/how-it-works" variant="outline" iconRight={ArrowRight}>Learn more</Button>} />
-        <ol className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <SectionHead eyebrow="How it works" title="Six steps to your moment" action={<Button to="/how-it-works" variant="outline" iconRight={ArrowRight}>Learn more</Button>} />
+        <ol className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {STEPS.map((s, i) => (
             <li key={s.title} className="card relative p-6">
               <span className="absolute right-5 top-5 font-display text-4xl font-semibold text-ivory-300">0{i + 1}</span>

@@ -69,7 +69,7 @@ export default function Contact() {
               </div>
             </div>
           ))}
-          <p className="px-1 text-xs text-ink-muted">QURANDAZI will never ask you for a payment to participate or to claim a reward.</p>
+          <p className="px-1 text-xs text-ink-muted">QURANDAZI never charges entry fees, and never asks for a payment to release a prize. Deposits go only to the company account shown in your dashboard.</p>
         </div>
         <div className="card p-6 sm:p-8 lg:col-span-8">
           {sent ? (

@@ -1,7 +1,7 @@
 import { supabase, unwrap } from './supabase'
 
 const PUBLIC_FIELDS =
-  'id, title, slug, summary, banner_url, prize_description, start_date, end_date, draw_date, status, is_featured, winners_count, entries_count, eligibility_summary, category:categories(id, name, slug)'
+  'id, title, slug, summary, banner_url, prize_description, start_date, end_date, draw_date, status, is_featured, winners_count, entries_count, eligibility_summary, category:categories(id, name, slug, deposit_amount)'
 
 function applyPhase(q, phase) {
   const now = new Date().toISOString()
@@ -51,7 +51,7 @@ export const campaignService = {
     return unwrap(
       await supabase
         .from('campaigns')
-        .select('*, category:categories(id, name, slug, reference_amount, reference_label), eligibility_rules(*)')
+        .select('*, category:categories(id, name, slug, reference_amount, reference_label, deposit_amount, deposit_lock_in_days), eligibility_rules(*)')
         .eq('slug', slug)
         .maybeSingle(),
     )

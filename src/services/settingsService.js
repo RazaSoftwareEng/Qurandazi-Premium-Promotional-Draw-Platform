@@ -11,10 +11,26 @@ export const DEFAULT_SETTINGS = {
   homepage: {
     hero_title: 'Your Chance. Your Moment.',
     hero_subtitle:
-      'Free-entry promotional campaigns with transparent, independently verifiable draws. No purchase. No deposit. Just your moment.',
+      'Promotional campaigns with transparent, independently verifiable draws. Your deposit is refundable, never a fee.',
     announcement: '',
   },
   social: { facebook: '', instagram: '', x: '', youtube: '' },
+  deposit_terms: {
+    version: 'v1',
+    allow_early_withdrawal: false,
+    bank_name: '',
+    account_title: '',
+    account_number: '',
+    iban: '',
+    gateway_instructions: '',
+    terms_text: [
+      "Your deposit is not a fee. It is held in the company's account and returned to you in full, as set out in these terms.",
+      'The deposit stays locked for the lock-in period shown for its category. After that you can request a withdrawal from your dashboard at any time.',
+      'While your deposit is verified and active, you can join campaigns in its category and in any lower category.',
+      'If you withdraw your deposit before a campaign closes, your entry in that campaign is automatically excluded from its draw.',
+      'Refunds are paid to the account you provide, and the payout transaction ID is recorded on your deposit.',
+    ].join('\n'),
+  },
 }
 
 export const settingsService = {

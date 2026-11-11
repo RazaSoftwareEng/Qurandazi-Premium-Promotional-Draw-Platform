@@ -98,7 +98,7 @@ export default function Entries() {
 
   return (
     <>
-      <PageHeader title="Entries" description="Review free entries, verify eligibility and export records. Duplicate entries are blocked by the database." actions={<Button variant="outline" icon={Download} onClick={exportCsv} loading={exporting}>Export CSV</Button>} />
+      <PageHeader title="Entries" description="Review entries, verify eligibility and export records. Duplicate entries are blocked by the database." actions={<Button variant="outline" icon={Download} onClick={exportCsv} loading={exporting}>Export CSV</Button>} />
       <DataTable
         columns={columns}
         rows={data?.data || []}

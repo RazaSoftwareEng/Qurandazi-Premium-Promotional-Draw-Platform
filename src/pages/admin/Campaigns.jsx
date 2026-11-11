@@ -159,9 +159,9 @@ function CampaignForm({ open, onClose, campaign, initial, categories, onSaved })
 
         <fieldset className="grid gap-4">
           <legend className="mb-2 text-xs font-bold uppercase tracking-wider text-gold-700">Rules & instructions</legend>
-          <TextArea label="Campaign rules" placeholder={"1. One free entry per member.\n2. …"} rows={5} value={values.rules} onChange={set('rules')} error={errors.rules} maxLength={10000} />
+          <TextArea label="Campaign rules" placeholder={"1. One entry per member.\n2. …"} rows={5} value={values.rules} onChange={set('rules')} error={errors.rules} maxLength={10000} />
           <TextArea label="Free participation instructions" placeholder="e.g. Sign in, verify your email, then press “Join Campaign”." rows={3} value={values.participation_instructions} onChange={set('participation_instructions')} error={errors.participation_instructions} maxLength={5000} />
-          <p className="rounded-lg bg-gold-100/50 px-3 py-2 text-xs text-navy-900">All campaigns must be free to enter. Do not add purchase, deposit or payment conditions.</p>
+          <p className="rounded-lg bg-gold-100/50 px-3 py-2 text-xs text-navy-900">The deposit requirement comes from the campaign’s category (Categories → Required deposit). No entry fee can be charged.</p>
         </fieldset>
       </form>
     </Modal>

@@ -92,7 +92,7 @@ function ScheduleModal({ open, onClose, draw, onSaved }) {
 }
 
 const ACTIONS = {
-  freeze: { label: 'Freeze entries', icon: Lock, title: 'Freeze eligible entries?', message: 'An immutable snapshot of all eligible entries is created and a secret seed is committed. Entries can no longer be added or changed for this campaign.', confirmText: 'FREEZE' },
+  freeze: { label: 'Freeze entries', icon: Lock, title: 'Freeze eligible entries?', message: "A snapshot of all eligible entries is created and a secret seed is committed. The snapshot can't be changed. Entries whose deposit was not active at closing time are left out. After this, entries can't be added or changed for this campaign.", confirmText: 'FREEZE' },
   execute: { label: 'Execute draw', icon: Shuffle, title: 'Execute the draw now?', message: 'Winners are derived from the committed seed. This can only happen once and cannot be undone.', confirmText: 'DRAW' },
   approve: { label: 'Approve results', icon: BadgeCheck, title: 'Approve these results?', message: 'Confirm you have reviewed the audit record. A different Super Admin from the executor must approve when one exists.' },
   publish: { label: 'Publish results', icon: Megaphone, title: 'Publish results publicly?', message: 'Results become public, the campaign is completed and all participants are notified.', confirmText: 'PUBLISH' },
@@ -116,7 +116,12 @@ export default function Draws() {
     try {
       const { type, draw } = action
       if (type === 'cancel') await drawService.cancel(draw.id, reason)
-      else await drawService[type](draw.id)
+      else {
+        const res = await drawService[type](draw.id)
+        if (type === 'freeze' && res?.excluded_entries > 0) {
+          toast(`${res.excluded_entries} entr${res.excluded_entries === 1 ? 'y was' : 'ies were'} excluded: no active deposit at closing.`, { icon: 'ℹ️', duration: 8000 })
+        }
+      }
       toast.success(`${ACTIONS[type].label} — done`)
       setAction(null)
       reload()

@@ -4,7 +4,7 @@ import Logo from '@/components/ui/Logo'
 import SetupNotice from '@/components/layout/SetupNotice'
 
 const POINTS = [
-  'Every entry is 100% free — no purchase or deposit',
+  'No entry fee. Your deposit is refundable, never a fee',
   'One fair entry per member, per campaign',
   'Winners selected by a verifiable cryptographic process',
 ]

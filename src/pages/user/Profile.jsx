@@ -3,6 +3,7 @@ import { Camera, Loader2, Save } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { Avatar, Badge, Button, FormInput, TextArea } from '@/components/ui'
 import PageHeader from '@/components/layout/PageHeader'
+import KycCard from '@/components/deposit/KycCard'
 import { useAuth } from '@/context/AuthContext'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useLiveValidation } from '@/hooks/useLiveValidation'
@@ -29,6 +30,7 @@ export default function Profile() {
   const [uploading, setUploading] = useState(false)
   const [editing, setEditing] = useState(false)
   const fileRef = useRef(null)
+  const nameLocked = ['pending', 'verified'].includes(profile?.kyc_status)
 
   useEffect(() => {
     if (profile && !editing) setValues(fromProfile(profile))
@@ -88,7 +90,7 @@ export default function Profile() {
 
   return (
     <>
-      <PageHeader title="My Profile" description="Keep your details up to date — they are used for eligibility checks and to contact winners." />
+      <PageHeader title="My Profile" description="Keep your details up to date and verify your identity — both are required before you can make a deposit." />
       <div className="grid gap-6 lg:grid-cols-12">
         <aside className="card p-6 text-center lg:col-span-4">
           <div className="relative mx-auto w-fit">
@@ -106,7 +108,8 @@ export default function Profile() {
           <h2 className="mt-4 text-lg font-bold text-navy-900">{profile?.full_name || 'Unnamed member'}</h2>
           <p className="text-sm text-ink-muted">{user.email}</p>
           <div className="mt-3 flex justify-center gap-2">
-            <Badge tone={isEmailVerified ? 'success' : 'warning'} dot>{isEmailVerified ? 'Verified' : 'Unverified'}</Badge>
+            <Badge tone={isEmailVerified ? 'success' : 'warning'} dot>{isEmailVerified ? 'Email verified' : 'Email unverified'}</Badge>
+            {profile?.kyc_status === 'verified' && <Badge tone="gold" dot>KYC Verified</Badge>}
             <Badge tone={profile?.status === 'active' ? 'info' : 'danger'} dot>{profile?.status}</Badge>
           </div>
           <p className="mt-4 text-xs text-ink-muted">Member since {formatDate(profile?.created_at)}</p>
@@ -120,7 +123,7 @@ export default function Profile() {
             {!editing && <Button variant="outline" size="sm" onClick={() => setEditing(true)}>Edit profile</Button>}
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
-            <FormInput label="Full name" placeholder="e.g. Ahmed Khan" required value={values.full_name} onChange={set('full_name')} error={errors.full_name} disabled={!editing} autoComplete="name" />
+            <FormInput label="Full name (as on CNIC)" placeholder="e.g. Ahmed Khan" required value={values.full_name} onChange={set('full_name')} error={errors.full_name} disabled={!editing || nameLocked} autoComplete="name" help={nameLocked ? 'Locked after CNIC submission. Contact support to change it.' : undefined} />
             <FormInput label="Email" value={user.email} disabled help="Contact support to change your email." />
             <FormInput label="Phone number" type="tel" placeholder="+92 300 1234567" value={values.phone} onChange={set('phone')} error={errors.phone} disabled={!editing} autoComplete="tel" />
             <FormInput label="City" placeholder="e.g. Karachi" value={values.city} onChange={set('city')} error={errors.city} disabled={!editing} autoComplete="address-level2" />
@@ -133,6 +136,9 @@ export default function Profile() {
             </div>
           )}
         </form>
+        <div className="lg:col-span-12">
+          <KycCard />
+        </div>
       </div>
     </>
   )

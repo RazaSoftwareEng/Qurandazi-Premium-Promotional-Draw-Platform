@@ -1,25 +1,35 @@
-import { BadgeCheck, Fingerprint, Lock, ScrollText, ShieldCheck, Shuffle, Sparkles, UserPlus } from 'lucide-react'
+import { BadgeCheck, Fingerprint, Lock, ScrollText, ShieldCheck, Shuffle, Sparkles, Undo2, UserPlus, Wallet } from 'lucide-react'
 
 export const STEPS = [
   {
     icon: UserPlus,
-    title: 'Create a free account',
-    text: 'Register with your email and verify it. Registration is free and takes under a minute.',
+    title: 'Register & verify',
+    text: 'Create an account, verify your email, complete your profile and upload your CNIC. An admin reviews it and marks you KYC Verified.',
+  },
+  {
+    icon: Wallet,
+    title: 'Make a refundable deposit',
+    text: 'Choose Grande, Alto or 125. Read the deposit terms, pay into our company account and upload your transaction ID. We verify it against our bank statement.',
   },
   {
     icon: Sparkles,
-    title: 'Join a campaign — free',
-    text: 'Browse open campaigns and press Join. You get one entry per campaign with a unique reference number.',
+    title: 'Join a campaign',
+    text: 'A verified deposit lets you join campaigns in its category or any lower one. You get one entry per campaign, with a unique QZ- reference.',
   },
   {
     icon: Lock,
     title: 'Entries are frozen at closing',
-    text: 'When a campaign closes, eligible entries are locked into an immutable snapshot with a published fingerprint.',
+    text: 'When a campaign closes, every entry whose deposit is still active is locked into a snapshot that can’t be changed, with a published fingerprint.',
   },
   {
     icon: Shuffle,
     title: 'A verifiable draw',
-    text: 'Winners are selected by a cryptographically secure process, approved by a Super Admin and published with a full audit trail.',
+    text: 'Winners are chosen by a cryptographically secure process. A Super Admin approves the result, and anyone can verify it on the Winners page.',
+  },
+  {
+    icon: Undo2,
+    title: 'Withdraw your deposit',
+    text: 'After the lock-in period, request a withdrawal from your dashboard. We refund it to your account and record the payout transaction ID.',
   },
 ]
 
@@ -41,15 +51,27 @@ export const TRUST = [
   },
   {
     icon: ShieldCheck,
-    title: 'Always free',
-    text: 'No tickets, no deposits, no purchases. Category reference amounts are informational labels only.',
+    title: 'Refundable, never a fee',
+    text: 'Deposits go only to the company account, are verified against the bank statement and are refunded with a recorded payout transaction.',
   },
 ]
 
 export const FAQS = [
   {
-    q: 'Is it really free to participate?',
-    a: 'Yes. Every QURANDAZI campaign is completely free to enter. We do not sell tickets, collect deposits or require any purchase. Amounts shown on categories are legacy informational references only — never entry fees or conditions.',
+    q: 'Do I have to pay to participate?',
+    a: 'There is no entry fee. To join a campaign you need a verified, refundable deposit in that campaign’s category or a higher one: Grande PKR 20,000, Alto PKR 10,000 or 125 PKR 5,000. The deposit is not a fee. It is returned under the deposit terms you accept before paying.',
+  },
+  {
+    q: 'Why do I need to verify my CNIC?',
+    a: 'Only KYC-verified members can make deposits. This stops people using several accounts, and it lets us confirm a winner’s identity at handover. CNIC images are stored privately and seen only by our verification team.',
+  },
+  {
+    q: 'How do I get my deposit back?',
+    a: 'After your category’s lock-in period, press “Withdraw” in My Deposits and give your refund account details. We transfer the money and record the payout transaction ID. Your deposit status changes from Withdrawal Requested to Refunded.',
+  },
+  {
+    q: 'What happens to my entry if I withdraw my deposit?',
+    a: 'Only entries backed by a deposit that is still active when the campaign closes go into the draw. If you withdraw before a campaign closes, your entry in that campaign is automatically left out. Withdrawing after it closes doesn’t affect that draw.',
   },
   {
     q: 'How many times can I enter a campaign?',
@@ -69,11 +91,11 @@ export const FAQS = [
   },
   {
     q: 'What are the eligibility requirements?',
-    a: 'Each campaign lists its own requirements — for example a verified email address or a complete profile. The Join button tells you exactly what is missing if you are not yet eligible.',
+    a: 'Every campaign needs a verified identity (CNIC) and a verified deposit for its category or a higher one. Some campaigns also have their own rules. If you are not yet eligible, the Join button tells you exactly what is missing.',
   },
   {
     q: 'How will I know if I have won?',
-    a: 'Winners receive an in-app notification and the result appears in their Draw History. Our team will contact winners using the details on their profile. We will never ask you for a payment to claim a prize.',
+    a: 'Winners receive an in-app notification and the result appears in their Draw History. Our team will contact winners using the details on their profile. At handover we check your CNIC against your verified profile. We will never ask you for a payment to release a prize.',
   },
   {
     q: 'Can I delete my account?',

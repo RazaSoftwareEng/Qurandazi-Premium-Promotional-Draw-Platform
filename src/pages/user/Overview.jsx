@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Bell, ClipboardList, MailWarning, Sparkles, Trophy, UserCircle2 } from 'lucide-react'
+import { ArrowRight, Bell, CheckCircle2, Circle, ClipboardList, Sparkles, Trophy, UserCircle2, Wallet } from 'lucide-react'
 import { Alert, Avatar, Badge, Button, EmptyState, ErrorState, Skeleton, StatCard, StatusBadge } from '@/components/ui'
 import CampaignCard from '@/components/campaign/CampaignCard'
 import { useAuth } from '@/context/AuthContext'
@@ -9,8 +9,9 @@ import { campaignService } from '@/services/campaignService'
 import { entryService } from '@/services/entryService'
 import { drawService } from '@/services/drawService'
 import { notificationService } from '@/services/notificationService'
+import { depositService } from '@/services/depositService'
 import { ENTRY_STATUS } from '@/utils/campaign'
-import { formatDate, formatRelative } from '@/utils/format'
+import { formatDate, formatPKR, formatRelative } from '@/utils/format'
 
 export default function Overview() {
   useDocumentTitle('Dashboard')
@@ -21,11 +22,22 @@ export default function Overview() {
   const history = useAsync(() => drawService.myHistory(), [user.id])
   const campaigns = useAsync(() => campaignService.listPublic({ phase: 'open', from: 0, to: 2 }), [])
   const notes = useAsync(() => notificationService.list({ userId: user.id, from: 0, to: 4 }), [user.id])
+  const deposits = useAsync(() => depositService.mine(user.id), [user.id])
 
   const all = history.data || []
   const wins = all.filter((h) => h.won).length
   const pending = all.filter((h) => h.result_status !== 'published').length
-  const profileComplete = profile?.full_name && profile?.phone && profile?.address
+  const profileComplete = Boolean(profile?.full_name && profile?.phone && profile?.address)
+  const active = (deposits.data || []).filter((d) => d.status === 'verified').sort((a, b) => b.amount - a.amount)[0]
+  const pendingDeposit = (deposits.data || []).some((d) => d.status === 'pending')
+  const kyc = profile?.kyc_status
+  const steps = [
+    { done: isEmailVerified, label: 'Verify your email', hint: 'Check your inbox for the verification link.' },
+    { done: profileComplete, label: 'Complete your profile', hint: 'Full name, phone and address.', to: '/dashboard/profile' },
+    { done: kyc === 'verified', label: 'Get KYC verified', hint: kyc === 'pending' ? 'Your CNIC is under review.' : kyc === 'rejected' ? 'Your CNIC was rejected. Please resubmit it.' : 'Upload the front and back of your CNIC.', to: '/dashboard/profile' },
+    { done: Boolean(active), label: 'Make a verified deposit', hint: pendingDeposit ? 'Your deposit is awaiting verification.' : 'Grande, Alto or 125. Refundable, never a fee.', to: '/dashboard/deposits' },
+  ]
+  const allDone = steps.every((st) => st.done)
 
   return (
     <div className="space-y-6">
@@ -44,10 +56,30 @@ export default function Overview() {
         </div>
       </section>
 
-      {!isEmailVerified && <Alert tone="warning" icon={MailWarning} title="Verify your email">Most campaigns require a verified email address. Check your inbox for the verification link.</Alert>}
-      {!profileComplete && (
-        <Alert tone="gold" icon={UserCircle2} title="Complete your profile">
-          Add your phone number and address to become eligible for more campaigns. <Link to="/dashboard/profile" className="font-semibold underline">Update profile</Link>
+      {!deposits.loading && !allDone && (
+        <section className="card p-5">
+          <h2 className="font-bold text-navy-900">Get ready to join campaigns</h2>
+          <ol className="mt-4 grid gap-3 md:grid-cols-4">
+            {steps.map((st, i) => {
+              const Icon = st.done ? CheckCircle2 : Circle
+              const inner = (
+                <>
+                  <p className={`flex items-center gap-2 text-sm font-bold ${st.done ? 'text-emerald-700' : 'text-navy-900'}`}><Icon className="h-4 w-4 shrink-0" /> {i + 1}. {st.label}</p>
+                  {!st.done && <p className="mt-1 text-xs text-ink-muted">{st.hint}</p>}
+                </>
+              )
+              return (
+                <li key={st.label} className={`rounded-xl border p-3 ${st.done ? 'border-emerald-200 bg-emerald-50/60' : 'border-ivory-300'}`}>
+                  {!st.done && st.to ? <Link to={st.to} className="block hover:opacity-80">{inner}</Link> : inner}
+                </li>
+              )
+            })}
+          </ol>
+        </section>
+      )}
+      {active && (
+        <Alert tone="success" icon={Wallet} title={`Active deposit: ${active.category?.name} · ${formatPKR(active.amount)}`}>
+          You can join campaigns that require {formatPKR(active.amount)} or less. <Link to="/dashboard/deposits" className="font-semibold underline">Manage deposits</Link>
         </Alert>
       )}
 

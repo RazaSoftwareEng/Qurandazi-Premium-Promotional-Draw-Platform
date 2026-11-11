@@ -72,7 +72,7 @@ export default function Navbar() {
                 Sign in
               </Button>
               <Button to="/register" variant="primary" size="sm">
-                Join Free
+                Join Now
               </Button>
             </>
           )}
@@ -118,7 +118,7 @@ export default function Navbar() {
                     Sign in
                   </Button>
                   <Button to="/register" variant="primary" size="sm">
-                    Join Free
+                    Join Now
                   </Button>
                 </>
               )}

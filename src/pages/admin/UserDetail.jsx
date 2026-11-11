@@ -10,6 +10,7 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { adminService } from '@/services/adminService'
 import { entryService } from '@/services/entryService'
 import { ENTRY_STATUS } from '@/utils/campaign'
+import { KYC_STATUS } from '@/utils/deposit'
 import { formatDate, formatDateTime } from '@/utils/format'
 import { getErrorMessage } from '@/utils/errors'
 import { ROLE_META, UserFormModal } from './Users'
@@ -57,6 +58,9 @@ export default function UserDetail() {
     ['City', u.city || '—'],
     ['Address', u.address || '—'],
     ['Email verified', u.email_confirmed_at ? formatDateTime(u.email_confirmed_at) : 'Not verified'],
+    ['KYC', <span key="kyc" className="inline-flex flex-col items-end gap-1"><StatusBadge map={KYC_STATUS} value={u.kyc_status} />{u.kyc_status !== 'not_submitted' && <Link to="/admin/kyc" className="text-xs text-gold-700 hover:underline">KYC Reviews</Link>}</span>],
+    ['CNIC', <span key="cnic" className="font-mono text-xs">{u.cnic || '—'}</span>],
+    ['Deposits', <Link key="dep" to={`/admin/deposits`} className="text-gold-700 hover:underline">View in Deposits</Link>],
     ['Last sign-in', formatDateTime(u.last_sign_in_at)],
     ['Registered', formatDateTime(u.created_at)],
     ['User ID', <span key="id" className="font-mono text-xs">{u.id}</span>],
@@ -119,7 +123,7 @@ export default function UserDetail() {
         onConfirm={run}
         loading={busy}
         title={confirm === 'delete' ? 'Delete user permanently?' : u.status === 'active' ? 'Suspend this account?' : 'Activate this account?'}
-        message={confirm === 'delete' ? 'This removes the account, profile and entries. It cannot be undone.' : 'This change is recorded in the activity log.'}
+        message={confirm === 'delete' ? 'This removes the account, profile and entries. It cannot be undone. Users with deposit records cannot be deleted; suspend them instead.' : 'This change is recorded in the activity log.'}
         confirmText={confirm === 'delete' ? 'DELETE' : undefined}
         tone={confirm === 'delete' || u.status === 'active' ? 'danger' : 'navy'}
         confirmLabel={confirm === 'delete' ? 'Delete user' : 'Confirm'}

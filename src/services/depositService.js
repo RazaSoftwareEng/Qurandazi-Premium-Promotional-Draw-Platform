@@ -4,7 +4,9 @@ import { storageService } from './storageService'
 export const PROOF_BUCKET = 'deposit-proofs'
 
 const adminSelect = (inner) => `*, category:categories(id, name, slug),
-  profile:profiles${inner ? '!inner' : ''}(id, full_name, email, phone, cnic, kyc_status)`
+  profile:profiles!deposits_user_id_fkey${inner ? '!inner' : ''}(id, full_name, email, phone, cnic, kyc_status)`
+// FK hint is required: entries(deposit_id, user_id) makes deposits<->profiles
+// also reachable many-to-many, which PostgREST would report as ambiguous.
 
 export const depositService = {
   // ---------------- User ----------------

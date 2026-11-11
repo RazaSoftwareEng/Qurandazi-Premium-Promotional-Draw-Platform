@@ -48,7 +48,7 @@ export default function MyEntries() {
 
   return (
     <>
-      <PageHeader title="My Entries" description="Every free entry you’ve submitted, with its unique reference number." />
+      <PageHeader title="My Entries" description="Every entry you’ve submitted, with its unique reference number. An entry stays in its draw only if your deposit is still active when the campaign closes." />
       <DataTable
         columns={columns}
         rows={data?.data || []}

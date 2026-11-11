@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Bell, CheckCheck, Gift, Megaphone, ClipboardCheck, Trash2, Trophy, Info } from 'lucide-react'
+import { Bell, CheckCheck, Gift, IdCard, Megaphone, ClipboardCheck, Trash2, Trophy, Info, Wallet } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { Button, EmptyState, ErrorState, Pagination, Skeleton } from '@/components/ui'
 import PageHeader from '@/components/layout/PageHeader'
@@ -12,10 +12,12 @@ import { notificationService } from '@/services/notificationService'
 import { formatRelative } from '@/utils/format'
 import { getErrorMessage } from '@/utils/errors'
 
-const ICONS = { announcement: Megaphone, campaign: Gift, entry: ClipboardCheck, winner: Trophy, result: Trophy, system: Info }
+const ICONS = { announcement: Megaphone, campaign: Gift, entry: ClipboardCheck, winner: Trophy, result: Trophy, system: Info, deposit: Wallet, kyc: IdCard }
 const FILTERS = [
   ['', 'All'],
   ['announcement', 'Announcements'],
+  ['deposit', 'Deposits'],
+  ['kyc', 'Verification'],
   ['entry', 'Entries'],
   ['winner', 'Winner'],
   ['result', 'Results'],
@@ -56,7 +58,7 @@ export default function Notifications() {
     <>
       <PageHeader
         title="Notifications"
-        description="Campaign announcements, entry confirmations and results."
+        description="Announcements, verification and deposit updates, entry confirmations and results."
         actions={<Button variant="outline" size="sm" icon={CheckCheck} onClick={() => act(() => notificationService.markAllRead(user.id), 'All marked as read')}>Mark all read</Button>}
       />
       <div className="card">

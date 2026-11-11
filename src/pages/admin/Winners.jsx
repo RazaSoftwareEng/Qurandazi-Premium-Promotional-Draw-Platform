@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Download, ExternalLink, Trophy } from 'lucide-react'
+import { Download, ExternalLink, PackageCheck, Trophy } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { Button, DataTable, EmptyState, Select, StatusBadge } from '@/components/ui'
+import { Badge, Button, DataTable, EmptyState, Select, StatusBadge } from '@/components/ui'
+import HandoverModal, { handoverOf } from '@/components/campaign/HandoverModal'
 import PageHeader from '@/components/layout/PageHeader'
 import { useAsync } from '@/hooks/useAsync'
 import { usePagination } from '@/hooks/usePagination'
@@ -11,7 +12,7 @@ import { drawService } from '@/services/drawService'
 import { adminService } from '@/services/adminService'
 import { DRAW_STATUS } from '@/utils/campaign'
 import { downloadCSV } from '@/utils/csv'
-import { formatDateTime } from '@/utils/format'
+import { formatDate, formatDateTime } from '@/utils/format'
 import { getErrorMessage } from '@/utils/errors'
 
 export const WINNER_EXPORT_COLUMNS = [
@@ -22,12 +23,15 @@ export const WINNER_EXPORT_COLUMNS = [
   { key: 'user_id', label: 'User ID' },
   { key: 'status', label: 'Draw status', value: (r) => r.draw?.status },
   { key: 'published', label: 'Published at', value: (r) => r.draw?.published_at },
+  { key: 'handover', label: 'Handed over on', value: (r) => handoverOf(r)?.handed_over_on },
+  { key: 'handover_prize', label: 'Prize handed over', value: (r) => handoverOf(r)?.prize_description },
 ]
 
 export default function Winners() {
   useDocumentTitle('Winner Management')
   const [status, setStatus] = useState('')
   const [exporting, setExporting] = useState(false)
+  const [handover, setHandover] = useState(null)
   const pg = usePagination(15)
   const { data, loading, error, reload } = useAsync(() => drawService.adminResults({ status, from: pg.from, to: pg.to }), [status, pg.from])
 
@@ -51,6 +55,16 @@ export default function Winners() {
     { key: 'draw', header: 'Draw', render: (r) => r.draw?.title },
     { key: 'status', header: 'Status', render: (r) => <StatusBadge map={DRAW_STATUS} value={r.draw?.status} /> },
     { key: 'created_at', header: 'Drawn', render: (r) => formatDateTime(r.created_at), hideOnMobile: true },
+    {
+      key: 'handover',
+      header: 'Prize handover',
+      render: (r) => {
+        const h = handoverOf(r)
+        if (h) return <button type="button" onClick={() => setHandover(r)} className="text-left"><Badge tone="success" dot>Handed over</Badge><p className="mt-0.5 text-xs text-ink-muted">{formatDate(h.handed_over_on)}</p></button>
+        if (r.draw?.status !== 'published') return <span className="text-xs text-ink-muted">After publication</span>
+        return <Button size="sm" variant="navy" icon={PackageCheck} onClick={() => setHandover(r)}>Record</Button>
+      },
+    },
     { key: 'audit', header: '', render: (r) => (r.draw?.status === 'published' ? <Link to={`/winners/${r.draw.id}`} className="inline-flex items-center gap-1 text-sm font-semibold text-gold-700 hover:underline">Public audit <ExternalLink className="h-3.5 w-3.5" /></Link> : <Link to="/admin/draws" className="text-sm font-semibold text-gold-700 hover:underline">Review</Link>) },
   ]
 
@@ -58,7 +72,7 @@ export default function Winners() {
     <>
       <PageHeader
         title="Winners"
-        description="Selected winners across all draws. Results are immutable; approval and publication happen in Draw Management."
+        description="Winners from all draws. Results can't be changed; approval and publication happen in Draw Management. Record each prize handover here once the winner's CNIC is checked."
         actions={<><Button variant="outline" icon={Download} loading={exporting} onClick={exportCsv}>Export CSV</Button><Button to="/admin/notifications" variant="navy">Publish announcement</Button></>}
       />
       <DataTable
@@ -74,6 +88,7 @@ export default function Winners() {
         toolbar={<Select aria-label="Draw status" className="sm:w-60" value={status} onChange={(e) => { setStatus(e.target.value); pg.reset() }} placeholder="All draw statuses" options={['drawn', 'approved', 'published'].map((s) => ({ value: s, label: DRAW_STATUS[s].label }))} />}
         empty={<EmptyState icon={Trophy} title="No winners yet" message="Winners appear here once a draw has been executed." action={<Button to="/admin/draws" size="sm">Go to Draw Management</Button>} />}
       />
+      {handover && <HandoverModal result={handover} onClose={() => setHandover(null)} onSaved={() => { setHandover(null); reload() }} />}
     </>
   )
 }

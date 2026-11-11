@@ -12,15 +12,15 @@ import { formatPKR, slugify } from '@/utils/format'
 import { rules, validate } from '@/utils/validation'
 import { getErrorMessage } from '@/utils/errors'
 
-const EMPTY = { name: '', slug: '', tagline: '', description: '', image_url: null, reference_amount: '', reference_label: 'Minimum deposit reference', sort_order: 0, is_active: true }
+const EMPTY = { name: '', slug: '', tagline: '', description: '', image_url: null, deposit_amount: '', deposit_lock_in_days: 30, sort_order: 0, is_active: true }
 
 const CATEGORY_SCHEMA = {
   name: [rules.required('Category name is required'), rules.max(60)],
   slug: [rules.required('URL slug is required'), rules.slug()],
   tagline: [rules.max(120)],
   description: [rules.max(2000)],
-  reference_amount: [(v) => (v === '' || v === null || (Number(v) >= 0 && !Number.isNaN(Number(v))) ? null : 'Enter a positive number')],
-  reference_label: [rules.max(60)],
+  deposit_amount: [(v) => (v === '' || v === null || (Number(v) >= 0 && !Number.isNaN(Number(v))) ? null : 'Enter a positive number')],
+  deposit_lock_in_days: [rules.intRange(0, 3650)],
   sort_order: [rules.intRange(0, 999)],
 }
 
@@ -33,7 +33,7 @@ function CategoryForm({ open, onClose, category, onSaved }) {
 
   if (open && !lastOpen) {
     setLastOpen(true)
-    setValues(category ? { ...EMPTY, ...category, reference_amount: category.reference_amount ?? '' } : EMPTY)
+    setValues(category ? { ...EMPTY, ...category, deposit_amount: category.deposit_amount ?? '' } : EMPTY)
     setSlugTouched(Boolean(category))
     setErrors({})
   }
@@ -58,8 +58,8 @@ function CategoryForm({ open, onClose, category, onSaved }) {
       tagline: values.tagline?.trim() || null,
       description: values.description?.trim() || null,
       image_url: values.image_url || null,
-      reference_amount: values.reference_amount === '' ? null : Number(values.reference_amount),
-      reference_label: values.reference_label?.trim() || 'Minimum deposit reference',
+      deposit_amount: values.deposit_amount === '' ? null : Number(values.deposit_amount),
+      deposit_lock_in_days: Number(values.deposit_lock_in_days),
       sort_order: Number(values.sort_order),
       is_active: values.is_active,
     }
@@ -83,8 +83,8 @@ function CategoryForm({ open, onClose, category, onSaved }) {
         <FormInput label="URL slug" placeholder="e.g. grande" required value={values.slug} onChange={(e) => { setSlugTouched(true); set('slug')(e) }} error={errors.slug} />
         <FormInput label="Tagline" placeholder="e.g. Our flagship promotional tier" className="sm:col-span-2" value={values.tagline || ''} onChange={set('tagline')} error={errors.tagline} />
         <TextArea label="Description" placeholder="Describe this category for visitors…" className="sm:col-span-2" rows={3} value={values.description || ''} onChange={set('description')} error={errors.description} maxLength={2000} />
-        <FormInput label="Reference amount (PKR)" placeholder="e.g. 20000" type="number" min="0" value={values.reference_amount} onChange={set('reference_amount')} error={errors.reference_amount} help="Informational legacy label only — never an entry fee." />
-        <FormInput label="Reference label" placeholder="Minimum deposit reference" value={values.reference_label} onChange={set('reference_label')} />
+        <FormInput label="Required deposit (PKR)" placeholder="e.g. 20000" type="number" min="0" value={values.deposit_amount} onChange={set('deposit_amount')} error={errors.deposit_amount} help="Refundable deposit needed to join this category's campaigns. A deposit also covers every category with a lower amount. Leave empty for no deposit." />
+        <FormInput label="Lock-in period (days)" placeholder="30" type="number" min="0" value={values.deposit_lock_in_days} onChange={set('deposit_lock_in_days')} error={errors.deposit_lock_in_days} help="Applies to new deposits. Existing deposits keep the terms they were made under." />
         <FormInput label="Sort order" placeholder="0" type="number" min="0" value={values.sort_order} onChange={set('sort_order')} error={errors.sort_order} />
         <div className="flex items-end pb-2"><Toggle label="Active" description="Visible on the public website" checked={values.is_active} onChange={(v) => setValues((s) => ({ ...s, is_active: v }))} /></div>
         <div className="sm:col-span-2"><ImageUpload label="Category image" value={values.image_url} onChange={(url) => setValues((s) => ({ ...s, image_url: url }))} folder="categories" /></div>
@@ -116,7 +116,7 @@ export default function Categories() {
 
   return (
     <>
-      <PageHeader title="Categories" description="Manage promotional categories, their imagery and campaign associations." actions={<Button icon={Plus} onClick={() => setForm({ open: true, category: null })}>Add category</Button>} />
+      <PageHeader title="Categories" description="Manage categories, their required refundable deposit, lock-in period and campaigns. Changing an amount affects new joins and future freezes, so avoid changing it while campaigns are open." actions={<Button icon={Plus} onClick={() => setForm({ open: true, category: null })}>Add category</Button>} />
       {loading ? (
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">{[0, 1, 2].map((i) => <Skeleton key={i} className="h-72 rounded-2xl" />)}</div>
       ) : error ? (
@@ -134,7 +134,7 @@ export default function Categories() {
               <div className="flex flex-1 flex-col p-5">
                 <div className="flex flex-wrap gap-2">
                   <Badge tone={c.is_active ? 'success' : 'neutral'} dot>{c.is_active ? 'Active' : 'Hidden'}</Badge>
-                  <Badge tone="gold">{formatPKR(c.reference_amount)} ref.</Badge>
+                  {Number(c.deposit_amount) > 0 ? <Badge tone="gold">Deposit {formatPKR(c.deposit_amount)} · {c.deposit_lock_in_days}d lock-in</Badge> : <Badge tone="neutral">No deposit</Badge>}
                 </div>
                 <p className="mt-3 line-clamp-3 flex-1 text-sm text-ink-muted">{c.description || 'No description.'}</p>
                 <Link to={`/admin/campaigns?category=${c.id}`} className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-gold-700 hover:underline">

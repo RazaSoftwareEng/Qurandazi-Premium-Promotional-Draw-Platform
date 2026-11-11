@@ -41,7 +41,7 @@ export default function Footer() {
         <div className="md:col-span-4">
           <Logo light />
           <p className="mt-5 max-w-xs text-sm leading-6">
-            Free-entry promotional campaigns with transparent, independently verifiable draws. No purchase, no deposit — ever.
+            Promotional campaigns with transparent, independently verifiable draws. Deposits are refundable, never a fee.
           </p>
           <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-gold-500/30 px-3 py-1.5 text-xs font-semibold text-gold-400">
             <ShieldCheck className="h-3.5 w-3.5" /> 100% free participation
@@ -82,7 +82,7 @@ export default function Footer() {
       <div className="relative border-t border-white/10">
         <div className="container-page flex flex-col items-center justify-between gap-2 py-5 text-xs sm:flex-row">
           <p>© {new Date().getFullYear()} {settings.branding.site_name}. All rights reserved.</p>
-          <p className="text-white/50">No purchase or payment necessary to participate.</p>
+          <p className="text-white/50">No entry fees. Deposits are refundable under the published deposit terms.</p>
         </div>
       </div>
     </footer>

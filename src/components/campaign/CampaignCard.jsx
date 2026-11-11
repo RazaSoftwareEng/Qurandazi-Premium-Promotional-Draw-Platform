@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, CalendarClock, Gift, Users } from 'lucide-react'
+import { ArrowRight, CalendarClock, Gift, Users, Wallet } from 'lucide-react'
 import Badge from '../ui/Badge'
 import { LogoMark } from '../ui/Logo'
 import { getCampaignPhase } from '@/utils/campaign'
-import { countdown, formatDate, formatNumber, truncate } from '@/utils/format'
+import { countdown, formatDate, formatNumber, formatPKR, truncate } from '@/utils/format'
 
 export function CampaignImage({ src, title, className = '' }) {
   if (src) return <img src={src} alt={title} loading="lazy" className={`h-full w-full object-cover ${className}`} />
@@ -46,6 +46,11 @@ export default function CampaignCard({ campaign, joined = false, to }) {
         {campaign.prize_description && (
           <p className="mt-3 flex items-start gap-2 text-sm font-semibold text-navy-800">
             <Gift className="mt-0.5 h-4 w-4 shrink-0 text-gold-600" /> {campaign.prize_description}
+          </p>
+        )}
+        {Number(campaign.category?.deposit_amount) > 0 && (
+          <p className="mt-3 inline-flex w-fit items-center gap-1.5 rounded-md bg-gold-100/70 px-2 py-1 text-xs font-semibold text-navy-900">
+            <Wallet className="h-3.5 w-3.5 text-gold-700" /> Requires verified deposit: {formatPKR(campaign.category.deposit_amount)}
           </p>
         )}
         <dl className="mt-4 grid grid-cols-2 gap-3 border-t border-ivory-200 pt-4 text-xs">

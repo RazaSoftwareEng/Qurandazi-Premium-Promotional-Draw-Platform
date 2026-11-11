@@ -1,8 +1,8 @@
 import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import {
-  Bell, BarChart3, ClipboardList, FileText, Gift, History, Inbox, LayoutDashboard, Layers, Megaphone,
-  ScrollText, Settings, Shuffle, Sparkles, Trophy, User, Users,
+  Banknote, Bell, BarChart3, ClipboardList, FileText, Gift, History, IdCard, Inbox, LayoutDashboard, Layers, Megaphone,
+  ScrollText, Settings, Shuffle, Sparkles, Trophy, User, Users, Wallet,
 } from 'lucide-react'
 import { Spinner } from '@/components/ui'
 import PublicLayout from '@/layouts/PublicLayout'
@@ -38,6 +38,7 @@ const UserEntries = lazy(() => import('@/pages/user/MyEntries'))
 const UserDrawHistory = lazy(() => import('@/pages/user/DrawHistory'))
 const UserNotifications = lazy(() => import('@/pages/user/Notifications'))
 const UserSettings = lazy(() => import('@/pages/user/AccountSettings'))
+const UserDeposits = lazy(() => import('@/pages/user/Deposits'))
 // Admin
 const AdminOverview = lazy(() => import('@/pages/admin/Overview'))
 const AdminUsers = lazy(() => import('@/pages/admin/Users'))
@@ -52,11 +53,14 @@ const AdminMessages = lazy(() => import('@/pages/admin/Messages'))
 const AdminReports = lazy(() => import('@/pages/admin/Reports'))
 const AdminLogs = lazy(() => import('@/pages/admin/ActivityLogs'))
 const AdminSettings = lazy(() => import('@/pages/admin/Settings'))
+const AdminDeposits = lazy(() => import('@/pages/admin/Deposits'))
+const AdminKyc = lazy(() => import('@/pages/admin/KycReviews'))
 
 const USER_NAV = [
   {
     items: [
       { to: '/dashboard', label: 'Overview', icon: LayoutDashboard, end: true },
+      { to: '/dashboard/deposits', label: 'My Deposits', icon: Wallet },
       { to: '/dashboard/campaigns', label: 'Available Campaigns', icon: Sparkles },
       { to: '/dashboard/entries', label: 'My Entries', icon: ClipboardList },
       { to: '/dashboard/draw-history', label: 'Draw History', icon: History },
@@ -81,6 +85,13 @@ const ADMIN_NAV = [
       { to: '/admin/categories', label: 'Categories', icon: Layers },
       { to: '/admin/campaigns', label: 'Campaigns', icon: Gift },
       { to: '/admin/entries', label: 'Entries', icon: ClipboardList },
+    ],
+  },
+  {
+    title: 'Verification',
+    items: [
+      { to: '/admin/kyc', label: 'KYC Reviews', icon: IdCard },
+      { to: '/admin/deposits', label: 'Deposits', icon: Banknote },
     ],
   },
   {
@@ -151,6 +162,7 @@ export default function AppRoutes() {
             <Route path="draw-history" element={<UserDrawHistory />} />
             <Route path="notifications" element={<UserNotifications />} />
             <Route path="settings" element={<UserSettings />} />
+            <Route path="deposits" element={<UserDeposits />} />
           </Route>
         </Route>
 
@@ -169,6 +181,8 @@ export default function AppRoutes() {
             <Route path="reports" element={<AdminReports />} />
             <Route path="logs" element={<AdminLogs />} />
             <Route path="settings" element={<AdminSettings />} />
+            <Route path="deposits" element={<AdminDeposits />} />
+            <Route path="kyc" element={<AdminKyc />} />
           </Route>
         </Route>
 
