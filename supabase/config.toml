@@ -42,3 +42,7 @@ content_path = "./supabase/templates/email_change.html"
 
 [functions.admin-users]
 verify_jwt = true
+
+# Public sign-up (creates confirmed accounts server-side; no sign-up email)
+[functions.register]
+verify_jwt = false

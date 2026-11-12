@@ -45,6 +45,7 @@ If the env vars are missing, the app still renders and shows a yellow "Supabase 
 4. **Deploy the Edge Function.** It's used to add and delete users:
    ```bash
    supabase functions deploy admin-users
+   supabase functions deploy register --no-verify-jwt   # public sign-up: creates confirmed accounts, sends no email
    supabase secrets set ALLOWED_ORIGINS=http://localhost:5173,https://your-domain.com
    ```
    `SUPABASE_SERVICE_ROLE_KEY` is injected automatically inside Edge Functions. **Never put it in `.env` or any `VITE_` variable.**

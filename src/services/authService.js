@@ -1,14 +1,43 @@
 import { supabase, unwrap, SITE_URL } from './supabase'
 
+// Slug of the sign-up Edge Function (Dashboard -> Edge Functions -> URL ends with /functions/<slug>)
+const REGISTER_FUNCTION = import.meta.env.VITE_REGISTER_FUNCTION || 'register'
+
 export const authService = {
+  /**
+   * Creates the account through the `register` Edge Function, which confirms the
+   * email server-side so Supabase never sends a sign-up email (no email rate limit).
+   * Falls back to the standard client sign-up only if the function is not deployed.
+   */
   async signUp({ email, password, full_name, phone }) {
+    const payload = {
+      email: email.trim().toLowerCase(),
+      password,
+      full_name: full_name.trim(),
+      phone: phone?.trim() || null,
+    }
+    const { data, error } = await supabase.functions.invoke(REGISTER_FUNCTION, { body: payload })
+    if (!error) {
+      if (data?.error) throw new Error(data.error)
+      return { user: { id: data?.user_id }, session: null }
+    }
+    const status = error.context?.status
+    if (status && status !== 404) {
+      let message = error.message
+      try {
+        const body = await error.context.json()
+        if (body?.error) message = body.error
+      } catch {
+        /* keep generic message */
+      }
+      throw new Error(message)
+    }
+    // Function not deployed / unreachable: standard sign-up
     return unwrap(
       await supabase.auth.signUp({
-        email: email.trim().toLowerCase(),
+        email: payload.email,
         password,
-        options: {
-          data: { full_name: full_name.trim(), phone: phone?.trim() || null },
-        },
+        options: { data: { full_name: payload.full_name, phone: payload.phone } },
       }),
     )
   },
