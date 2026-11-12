@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Mail, MapPin, Phone, ShieldCheck } from 'lucide-react'
+import { AppDownloadLink } from './AppDownloadPrompt'
 import Logo from '../ui/Logo'
 import { useSettings } from '@/context/SettingsContext'
 
@@ -10,7 +11,7 @@ const COLS = [
       ['/campaigns', 'Campaigns'],
       ['/how-it-works', 'How It Works'],
       ['/winners', 'Winners & Audits'],
-      ['/register', 'Create Free Account'],
+      ['/register', 'Create an Account'],
     ],
   },
   {
@@ -44,7 +45,7 @@ export default function Footer() {
             Promotional campaigns with transparent, independently verifiable draws. Deposits are refundable, never a fee.
           </p>
           <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-gold-500/30 px-3 py-1.5 text-xs font-semibold text-gold-400">
-            <ShieldCheck className="h-3.5 w-3.5" /> 100% free participation
+            <ShieldCheck className="h-3.5 w-3.5" /> No entry fee · refundable deposits
           </div>
         </div>
         {COLS.map((col) => (
@@ -75,6 +76,9 @@ export default function Footer() {
             <li className="flex gap-2">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold-500" />
               {c.address}
+            </li>
+            <li>
+              <AppDownloadLink className="mt-1 rounded-lg border border-gold-500/40 px-3 py-2 text-gold-400 hover:bg-gold-500/10 hover:text-gold-300">Get the Android app</AppDownloadLink>
             </li>
           </ul>
         </div>

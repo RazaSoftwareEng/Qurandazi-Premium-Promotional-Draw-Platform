@@ -57,6 +57,7 @@ export default function Modal({ open, onClose, title, description, size = 'md', 
         aria-modal="true"
         aria-labelledby="modal-title"
         tabIndex={-1}
+        style={{ maxHeight: '92dvh' }}
         className={`relative flex max-h-[92vh] w-full ${SIZES[size]} animate-fade-up flex-col rounded-t-2xl bg-white shadow-lift outline-none sm:rounded-2xl`}
       >
         <div className="flex items-start justify-between gap-4 border-b border-ivory-200 px-5 py-4 sm:px-6">
@@ -73,7 +74,7 @@ export default function Modal({ open, onClose, title, description, size = 'md', 
           )}
         </div>
         <div className="overflow-y-auto px-5 py-5 sm:px-6">{children}</div>
-        {footer && <div className="flex flex-col-reverse gap-2 border-t border-ivory-200 px-5 py-4 sm:flex-row sm:justify-end sm:px-6">{footer}</div>}
+        {footer && <div className="flex flex-col-reverse gap-2 border-t border-ivory-200 px-5 py-4 sm:flex-row sm:justify-end sm:px-6" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>{footer}</div>}
       </div>
     </div>,
     document.body,

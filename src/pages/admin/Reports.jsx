@@ -39,7 +39,7 @@ export default function Reports() {
   const REPORTS = [
     { id: 'users', title: 'User report', icon: Users, text: 'All members with role, status, verification and entry counts.', run: async () => ['users', await adminService.exportUsers(), USER_EXPORT_COLUMNS] },
     { id: 'campaigns', title: 'Campaign report', icon: Gift, text: 'Every campaign with dates, status, eligibility rules and entry totals.', run: async () => ['campaigns', (await campaignService.adminList({ from: 0, to: 9999 })).data, CAMPAIGN_COLUMNS] },
-    { id: 'entries', title: 'Entry report', icon: ClipboardList, text: 'All free entries with participant details and review status.', run: async () => ['entries', await entryService.adminExport(), ENTRY_EXPORT_COLUMNS] },
+    { id: 'entries', title: 'Entry report', icon: ClipboardList, text: 'All entries with participant details and review status.', run: async () => ['entries', await entryService.adminExport(), ENTRY_EXPORT_COLUMNS] },
     { id: 'winners', title: 'Winner report', icon: Trophy, text: 'All selected winners with draw status and publication dates.', run: async () => ['winners', (await drawService.adminResults({ from: 0, to: 9999 })).data, WINNER_EXPORT_COLUMNS] },
   ]
 

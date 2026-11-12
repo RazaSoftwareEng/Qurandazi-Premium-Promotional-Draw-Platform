@@ -8,7 +8,7 @@ export default function FAQs() {
   useDocumentTitle('FAQs')
   return (
     <>
-      <PublicHero eyebrow="FAQs" title="Frequently asked questions" subtitle="Everything you need to know about free participation, eligibility and our verifiable draws." />
+      <PublicHero eyebrow="FAQs" title="Frequently asked questions" subtitle="Everything you need to know about deposits, eligibility and our verifiable draws." />
       <section className="container-page max-w-4xl py-16">
         <FaqList items={FAQS} />
         <div className="mt-10 text-center">

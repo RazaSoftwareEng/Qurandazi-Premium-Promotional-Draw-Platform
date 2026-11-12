@@ -108,7 +108,7 @@ export default function CampaignDetails() {
           </Block>
         </div>
 
-        <aside className="space-y-6 lg:col-span-4">
+        <aside className="order-first space-y-6 lg:order-none lg:col-span-4">
           <div className="lg:sticky lg:top-24 space-y-6">
             <JoinCampaignPanel campaign={c} onJoined={reload} />
             <div className="card divide-y divide-ivory-200">

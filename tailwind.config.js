@@ -39,10 +39,12 @@ export default {
       keyframes: {
         shimmer: { '100%': { transform: 'translateX(100%)' } },
         'fade-up': { '0%': { opacity: 0, transform: 'translateY(8px)' }, '100%': { opacity: 1, transform: 'none' } },
+        'fade-in': { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
       },
       animation: {
         shimmer: 'shimmer 1.6s infinite',
         'fade-up': 'fade-up .35s ease-out both',
+        'fade-in': 'fade-in .25s ease-out both',
       },
     },
   },

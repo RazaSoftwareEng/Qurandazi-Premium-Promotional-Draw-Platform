@@ -11,6 +11,7 @@ import { categoryService } from '@/services/categoryService'
 import { drawService } from '@/services/drawService'
 import { useSettings } from '@/context/SettingsContext'
 import { FAQS, STEPS, TRUST } from '@/utils/content'
+import AppDownloadPrompt from '@/components/layout/AppDownloadPrompt'
 import { formatDate, formatNumber } from '@/utils/format'
 
 function SectionHead({ eyebrow, title, text, dark = false, action }) {
@@ -59,6 +60,7 @@ export default function Home() {
 
   return (
     <>
+      <AppDownloadPrompt />
       {/* Hero */}
       <section className="relative overflow-hidden bg-navy-900 text-white">
         <div className="pattern-stars pointer-events-none absolute inset-0" aria-hidden />
@@ -105,7 +107,7 @@ export default function Home() {
               <dl className="mt-5 grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-white/10">
                 {[
                   ['Campaigns', stats.data?.campaigns],
-                  ['Free entries', stats.data?.entries],
+                  ['Entries', stats.data?.entries],
                   ['Published draws', stats.data?.draws],
                   ['Winners', stats.data?.winners],
                 ].map(([label, v]) => (
@@ -129,7 +131,7 @@ export default function Home() {
         <SectionHead
           eyebrow="Featured"
           title="Campaigns open now"
-          text="Join any open campaign for free. One entry per member — equal chances for everyone."
+          text="Join open campaigns with your verified, refundable deposit. One entry per member, equal chances for everyone."
           action={<Button to="/campaigns" variant="outline" iconRight={ArrowRight}>All campaigns</Button>}
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -140,7 +142,7 @@ export default function Home() {
           ) : featured.data?.length ? (
             featured.data.map((c) => <CampaignCard key={c.id} campaign={c} />)
           ) : (
-            <div className="card col-span-full"><EmptyState title="No open campaigns right now" message="New campaigns are announced regularly — create a free account to be notified." action={<Button to="/register">Create free account</Button>} /></div>
+            <div className="card col-span-full"><EmptyState title="No open campaigns right now" message="New campaigns are announced regularly — create an account to be notified." action={<Button to="/register">Create an account</Button>} /></div>
           )}
         </div>
       </section>
@@ -148,7 +150,7 @@ export default function Home() {
       {/* Categories */}
       <section className="bg-navy-900 py-20">
         <div className="container-page">
-          <SectionHead dark eyebrow="Categories" title="Three tiers. One promise: free." text="Each category groups campaigns by reward tier. Reference amounts are legacy labels for information only." />
+          <SectionHead dark eyebrow="Categories" title="Three tiers. One promise: fair." text="Each category has its own refundable deposit. A higher deposit also covers every lower tier." />
           <div className="grid gap-6 md:grid-cols-3">
             {categories.loading
               ? Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-80 rounded-2xl bg-navy-800" />)
@@ -236,9 +238,9 @@ export default function Home() {
         <div className="relative overflow-hidden rounded-3xl bg-gold-500 px-8 py-14 text-center sm:px-16">
           <div className="pattern-stars-dark pointer-events-none absolute inset-0" aria-hidden />
           <h2 className="relative font-display text-4xl font-semibold text-navy-900 sm:text-5xl">Your moment could be next.</h2>
-          <p className="relative mx-auto mt-3 max-w-xl text-navy-800">Create your free account in under a minute and join any open campaign.</p>
+          <p className="relative mx-auto mt-3 max-w-xl text-navy-800">Create your account in under a minute, verify your CNIC and join open campaigns.</p>
           <div className="relative mt-8 flex flex-wrap justify-center gap-3">
-            <Button to="/register" variant="navy" size="lg">Create free account</Button>
+            <Button to="/register" variant="navy" size="lg">Create an account</Button>
             <Button to="/campaigns" variant="outline" size="lg">Browse campaigns</Button>
           </div>
         </div>

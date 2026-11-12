@@ -8,6 +8,8 @@ import { useLiveValidation } from '@/hooks/useLiveValidation'
 import { authService } from '@/services/authService'
 import { passwordStrength, rules, validate } from '@/utils/validation'
 import { getErrorMessage } from '@/utils/errors'
+import { AppDownloadLink } from '@/components/layout/AppDownloadPrompt'
+import { isInApp, isIOS } from '@/utils/app'
 
 const SCHEMA = {
   full_name: [rules.required('Enter your full name'), rules.min(2), rules.max(60), rules.personName()],
@@ -60,6 +62,12 @@ export default function Register() {
       <p className="mt-2 text-sm text-ink-muted">
         Already a member? <Link to="/login" className="font-semibold text-gold-700 hover:underline">Sign in</Link>
       </p>
+      {!isIOS() && !isInApp() && (
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-gold-500/30 bg-gold-100/40 px-4 py-3 text-sm text-navy-900">
+          <span>Prefer your phone? Sign up in our Android app.</span>
+          <AppDownloadLink className="text-gold-700 hover:underline">Download app</AppDownloadLink>
+        </div>
+      )}
       {formError && <Alert tone="danger" className="mt-6">{formError}</Alert>}
       <form onSubmit={submit} noValidate className="mt-6 space-y-4">
         <FormInput label="Full name" maxLength={60} placeholder="e.g. Ahmed Khan" icon={User} autoComplete="name" value={values.full_name} onChange={set('full_name')} error={errors.full_name} required />
