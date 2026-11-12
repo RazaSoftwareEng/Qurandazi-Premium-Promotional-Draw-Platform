@@ -6,7 +6,18 @@
 //   { action: "create", email, password, full_name, phone?, role? }
 //   { action: "delete", user_id }
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4'
-import { corsHeaders } from '../_shared/cors.ts'
+// Self-contained (no shared imports) so it can also be pasted into the
+// Supabase Dashboard -> Edge Functions editor. Slug must be: admin-users
+const allowed = (Deno.env.get('ALLOWED_ORIGINS') ?? '*').split(',').map((s) => s.trim())
+function corsHeaders(origin: string | null): Record<string, string> {
+  const allowOrigin = allowed.includes('*') ? '*' : origin && allowed.includes(origin) ? origin : allowed[0]
+  return {
+    'Access-Control-Allow-Origin': allowOrigin,
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    Vary: 'Origin',
+  }
+}
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
 const ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')!

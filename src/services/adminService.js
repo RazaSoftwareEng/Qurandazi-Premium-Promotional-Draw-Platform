@@ -11,6 +11,9 @@ async function invokeAdminUsers(body) {
     } catch {
       /* ignore */
     }
+    if (/Failed to send a request/i.test(message)) {
+      message = 'The admin-users server function is not deployed or not reachable. Deploy it in Supabase -> Edge Functions (slug: admin-users).'
+    }
     throw new Error(message)
   }
   if (data?.error) throw new Error(data.error)
@@ -78,7 +81,8 @@ export const adminService = {
   setUserRole: async (id, role) => unwrap(await supabase.rpc('admin_set_user_role', { p_user_id: id, p_role: role })),
 
   createUser: (payload) => invokeAdminUsers({ action: 'create', ...payload }),
-  deleteUser: (userId) => invokeAdminUsers({ action: 'delete', user_id: userId }),
+  // Database function: works without the admin-users Edge Function being deployed
+  deleteUser: async (userId) => unwrap(await supabase.rpc('admin_delete_user', { p_user_id: userId })),
 
   // ---------------- Logs ----------------
   async logs({ search, action, from = 0, to = 19 } = {}) {

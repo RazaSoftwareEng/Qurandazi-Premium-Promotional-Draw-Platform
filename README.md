@@ -35,6 +35,8 @@ If the env vars are missing, the app still renders and shows a yellow "Supabase 
    - `supabase/migrations/20260101000007_disable_email_verification.sql` (no email verification: sign up, then sign in; activates existing unconfirmed accounts)
    - `supabase/migrations/20260101000008_unique_email_phone.sql` (one account per email and per phone number; stops and lists any existing duplicates)
    - `supabase/migrations/20260101000009_field_limits.sql` (name/phone/email limits enforced in the database)
+   - `supabase/migrations/20260101000010_safe_auth_sync.sql` (login can never fail because of profile syncing)
+   - `supabase/migrations/20260101000011_admin_delete_user.sql` (delete users from Admin -> Users without the Edge Function)
    - `supabase/seed.sql` (adds the Grande / Alto / 125 categories, three sample campaigns and the site settings)
 
    With the Supabase CLI you can run `supabase link` and then `supabase db push` instead, followed by `psql … -f supabase/seed.sql`.

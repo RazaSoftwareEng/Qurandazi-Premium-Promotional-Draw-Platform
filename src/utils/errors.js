@@ -11,6 +11,7 @@ const FRIENDLY = [
   [/Database error (saving|creating) new user/i, 'We could not create your account. This email or phone number may already be registered.'],
   [/email rate limit exceeded|over_email_send_rate_limit/i, 'Too many sign-ups right now. Please wait a few minutes and try again, or contact support.'],
   [/rate limit|too many requests|over_request_rate_limit/i, 'Too many attempts. Please wait a minute and try again.'],
+  [/Database error granting user/i, 'Sign-in failed because of a server setup issue. Please try again shortly or contact support.'],
   [/JWT expired/i, 'Your session has expired. Please sign in again.'],
   [/duplicate key value.*slug/i, 'That URL slug is already in use. Choose another.'],
   [/duplicate key value.*name/i, 'That name is already in use.'],
