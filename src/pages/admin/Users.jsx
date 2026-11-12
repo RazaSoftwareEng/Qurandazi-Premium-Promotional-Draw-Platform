@@ -31,7 +31,6 @@ export const USER_EXPORT_COLUMNS = [
   { key: 'role', label: 'Role' },
   { key: 'status', label: 'Status' },
   { key: 'entries_count', label: 'Entries' },
-  { key: 'email_confirmed_at', label: 'Email verified at' },
   { key: 'created_at', label: 'Registered at' },
 ]
 
@@ -57,8 +56,8 @@ export function UserFormModal({ open, onClose, user, onSaved }) {
 
   const set = (k) => (e) => setValues((v) => ({ ...v, [k]: e.target.value }))
   const schema = {
-    full_name: [rules.required('Full name is required'), rules.min(2), rules.max(120)],
-    phone: [rules.phone()],
+    full_name: [rules.required('Full name is required'), rules.min(2), rules.max(60), rules.personName()],
+    phone: [rules.mobilePK()],
     city: [rules.max(80)],
     address: [rules.max(300)],
     ...(isEdit ? {} : { email: [rules.required('Email is required'), rules.email()], password: [rules.required('Set a temporary password'), rules.password()] }),
@@ -109,12 +108,12 @@ export function UserFormModal({ open, onClose, user, onSaved }) {
       footer={<><Button variant="outline" onClick={onClose}>Cancel</Button><Button type="submit" form="user-form" loading={saving}>{isEdit ? 'Save changes' : 'Create user'}</Button></>}
     >
       <form id="user-form" onSubmit={submit} noValidate className="grid gap-4 sm:grid-cols-2">
-        <FormInput label="Full name" placeholder="e.g. Ahmed Khan" required className="sm:col-span-2" value={values.full_name || ''} onChange={set('full_name')} error={errors.full_name} />
+        <FormInput label="Full name" maxLength={60} placeholder="e.g. Ahmed Khan" required className="sm:col-span-2" value={values.full_name || ''} onChange={set('full_name')} error={errors.full_name} />
         {!isEdit && <FormInput label="Email" placeholder="user@example.com" type="email" required value={values.email || ''} onChange={set('email')} error={errors.email} />}
         {!isEdit && <FormInput label="Temporary password" placeholder="At least 8 characters, letters & numbers" type="password" required value={values.password || ''} onChange={set('password')} error={errors.password} autoComplete="new-password" />}
-        <FormInput label="Phone" placeholder="+92 300 1234567" type="tel" value={values.phone || ''} onChange={set('phone')} error={errors.phone} />
-        {isEdit && <FormInput label="City" placeholder="e.g. Karachi" value={values.city || ''} onChange={set('city')} />}
-        {isEdit && <TextArea label="Address" placeholder="House / street, area, city" rows={2} className="sm:col-span-2" value={values.address || ''} onChange={set('address')} />}
+        <FormInput label="Phone" placeholder="0300 1234567" type="tel" value={values.phone || ''} onChange={set('phone')} error={errors.phone} />
+        {isEdit && <FormInput label="City" maxLength={80} placeholder="e.g. Karachi" value={values.city || ''} onChange={set('city')} />}
+        {isEdit && <TextArea label="Address" maxLength={300} placeholder="House / street, area, city" rows={2} className="sm:col-span-2" value={values.address || ''} onChange={set('address')} />}
         <Select
           label="Role"
           value={values.role || 'user'}
@@ -193,7 +192,6 @@ export default function Users() {
     { key: 'phone', header: 'Phone', render: (u) => u.phone || '—', hideOnMobile: true },
     { key: 'role', header: 'Role', render: (u) => <Badge tone={ROLE_META[u.role]?.tone}>{ROLE_META[u.role]?.label}</Badge> },
     { key: 'status', header: 'Status', render: (u) => <Badge tone={u.status === 'active' ? 'success' : 'danger'} dot>{u.status}</Badge> },
-    { key: 'verified', header: 'Email', render: (u) => (u.email_confirmed_at ? <Badge tone="info">Verified</Badge> : <Badge tone="warning">Pending</Badge>), hideOnMobile: true },
     { key: 'entries_count', header: 'Entries', hideOnMobile: true },
     { key: 'created_at', header: 'Registered', render: (u) => <span title={formatDateTime(u.created_at)}>{formatDate(u.created_at)}</span> },
     {

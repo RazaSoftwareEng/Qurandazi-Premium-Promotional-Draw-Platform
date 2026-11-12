@@ -10,14 +10,9 @@ import { passwordStrength, rules, validate } from '@/utils/validation'
 import { getErrorMessage } from '@/utils/errors'
 
 const SCHEMA = {
-  full_name: [
-    rules.required('Enter your full name'),
-    rules.min(2),
-    rules.max(120),
-    (v) => (!v || /^[\p{L}][\p{L} .'-]*$/u.test(v.trim()) ? null : 'Use letters, spaces, dots, hyphens or apostrophes only'),
-  ],
+  full_name: [rules.required('Enter your full name'), rules.min(2), rules.max(60), rules.personName()],
   email: [rules.required(), rules.email()],
-  phone: [rules.phone()],
+  phone: [rules.required('Enter your phone number'), rules.mobilePK()],
   password: [rules.required(), rules.password()],
   confirm: [rules.required('Confirm your password'), rules.matches('password', 'Passwords do not match')],
   accept: [(v) => (v ? null : 'You must accept the Terms and Privacy Policy')],
@@ -42,13 +37,16 @@ export default function Register() {
     setLoading(true)
     setFormError('')
     try {
-      const res = await authService.signUp(values)
-      if (res?.session) {
-        toast.success('Account created')
-        navigate('/dashboard', { replace: true })
-      } else {
-        navigate(`/verify-email?email=${encodeURIComponent(values.email.trim())}`, { replace: true })
+      if (!(await authService.isPhoneAvailable(values.phone.trim()))) {
+        setErrors((er) => ({ ...er, phone: 'This phone number is already registered. Use another number or sign in.' }))
+        return
       }
+      const res = await authService.signUp(values)
+      // No email verification: the account is ready immediately. End the
+      // auto-created session so the member signs in explicitly.
+      if (res?.session) await authService.signOut().catch(() => {})
+      toast.success('Account created. Please sign in to continue.')
+      navigate('/login', { replace: true, state: { registeredEmail: values.email.trim().toLowerCase() } })
     } catch (err) {
       setFormError(getErrorMessage(err))
     } finally {
@@ -58,15 +56,15 @@ export default function Register() {
 
   return (
     <div className="animate-fade-up">
-      <h1 className="text-3xl font-extrabold tracking-tight text-navy-900">Create your free account</h1>
+      <h1 className="text-3xl font-extrabold tracking-tight text-navy-900">Create your account</h1>
       <p className="mt-2 text-sm text-ink-muted">
         Already a member? <Link to="/login" className="font-semibold text-gold-700 hover:underline">Sign in</Link>
       </p>
       {formError && <Alert tone="danger" className="mt-6">{formError}</Alert>}
       <form onSubmit={submit} noValidate className="mt-6 space-y-4">
-        <FormInput label="Full name" placeholder="e.g. Ahmed Khan" icon={User} autoComplete="name" value={values.full_name} onChange={set('full_name')} error={errors.full_name} required />
+        <FormInput label="Full name" maxLength={60} placeholder="e.g. Ahmed Khan" icon={User} autoComplete="name" value={values.full_name} onChange={set('full_name')} error={errors.full_name} required />
         <FormInput label="Email" placeholder="you@example.com" type="email" icon={Mail} autoComplete="email" value={values.email} onChange={set('email')} error={errors.email} required />
-        <FormInput label="Phone (optional)" type="tel" icon={Phone} autoComplete="tel" placeholder="+92 300 1234567" value={values.phone} onChange={set('phone')} error={errors.phone} />
+        <FormInput label="Phone number" type="tel" icon={Phone} autoComplete="tel" placeholder="0300 1234567" value={values.phone} onChange={set('phone')} error={errors.phone} required />
         <div>
           <FormInput label="Password" placeholder="At least 8 characters, letters & numbers" type="password" icon={Lock} autoComplete="new-password" value={values.password} onChange={set('password')} error={errors.password} required />
           {values.password && (
@@ -92,7 +90,7 @@ export default function Register() {
           {errors.accept && <p className="error-text">{errors.accept}</p>}
         </div>
         <Button type="submit" className="w-full" size="lg" icon={UserPlus} loading={loading}>Create account</Button>
-        <p className="text-center text-xs text-ink-muted">Registration and participation are always free.</p>
+        <p className="text-center text-xs text-ink-muted">After signing up, sign in to complete your profile, verify your CNIC and make a deposit.</p>
       </form>
     </div>
   )

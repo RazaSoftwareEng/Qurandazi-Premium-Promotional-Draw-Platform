@@ -39,6 +39,9 @@ const FIELDS = {
   deposit_terms: [
     { key: 'version', label: 'Terms version', placeholder: 'v1', help: 'Recorded on every new deposit. Change it (e.g. v2) whenever you change the terms below.', validators: [rules.required(), rules.max(20)] },
     { key: 'allow_early_withdrawal', label: 'Allow withdrawal before the lock-in period ends', description: 'If on, members can request a refund at any time.', type: 'toggle' },
+    { key: 'qr_image_url', label: 'Payment QR code (JazzCash / Raast)', type: 'image', aspect: 'aspect-[3/4] max-w-[220px]' },
+    { key: 'qr_account_name', label: 'QR account name', placeholder: 'e.g. Muzamil Khan', help: 'Shown next to the QR code so members can confirm the name in their app before paying.', validators: [rules.max(120)] },
+    { key: 'till_id', label: 'Till ID', placeholder: '981762761', help: 'Members can pay by dialling *786*10# and entering this Till ID.', validators: [(v) => (!v || /^\d{6,12}$/.test(String(v).trim()) ? null : 'Enter digits only (6–12)')] },
     { key: 'wallet_providers', label: 'Mobile wallets accepted', placeholder: 'EasyPaisa / JazzCash / NayaPay / SadaPay', validators: [rules.max(120)] },
     { key: 'wallet_number', label: 'Wallet account number', placeholder: '03003209005', help: 'Shown to members as the number to send their deposit to.', validators: [(v) => (!v || /^03\d{9}$/.test(String(v).replace(/[\s-]/g, '')) ? null : 'Enter an 11-digit mobile number, e.g. 03003209005')] },
     { key: 'bank_name', label: 'Bank name', placeholder: 'e.g. Meezan Bank', validators: [rules.max(80)] },
@@ -88,7 +91,7 @@ function SettingsForm({ section }) {
     <form onSubmit={submit} noValidate className="card max-w-3xl space-y-5 p-6">
       {FIELDS[section].map((f) =>
         f.type === 'image' ? (
-          <ImageUpload key={f.key} label={f.label} value={values[f.key]} onChange={(url) => setValues((v) => ({ ...v, [f.key]: url }))} folder="branding" aspect="aspect-[4/1]" />
+          <ImageUpload key={f.key} label={f.label} value={values[f.key]} onChange={(url) => setValues((v) => ({ ...v, [f.key]: url }))} folder="branding" aspect={f.aspect || 'aspect-[4/1]'} />
         ) : f.type === 'toggle' ? (
           <Toggle key={f.key} label={f.label} description={f.description} checked={Boolean(values[f.key])} onChange={(on) => setValues((v) => ({ ...v, [f.key]: on }))} />
         ) : f.type === 'textarea' ? (

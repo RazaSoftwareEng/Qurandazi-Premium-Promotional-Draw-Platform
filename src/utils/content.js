@@ -4,7 +4,7 @@ export const STEPS = [
   {
     icon: UserPlus,
     title: 'Register & verify',
-    text: 'Create an account, verify your email, complete your profile and upload your CNIC. An admin reviews it and marks you KYC Verified.',
+    text: 'Create an account and sign in. Complete your profile and upload your CNIC. An admin reviews it and marks you KYC Verified.',
   },
   {
     icon: Wallet,
@@ -91,7 +91,7 @@ export const FAQS = [
   },
   {
     q: 'What are the eligibility requirements?',
-    a: 'Every campaign needs a verified identity (CNIC) and a verified deposit for its category or a higher one. Some campaigns also have their own rules. If you are not yet eligible, the Join button tells you exactly what is missing.',
+    a: 'Every campaign needs a KYC-verified CNIC and a verified deposit for its category or a higher one. Some campaigns also have their own rules. If you are not yet eligible, the Join button tells you exactly what is missing.',
   },
   {
     q: 'How will I know if I have won?',

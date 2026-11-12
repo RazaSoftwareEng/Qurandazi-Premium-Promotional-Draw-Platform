@@ -19,12 +19,12 @@ export default function Login() {
   useDocumentTitle('Sign in')
   const navigate = useNavigate()
   const location = useLocation()
-  const [values, setValues] = useState({ email: rememberMe.email, password: '' })
+  const registeredEmail = location.state?.registeredEmail
+  const [values, setValues] = useState({ email: registeredEmail || rememberMe.email, password: '' })
   const [remember, setRemember] = useState(rememberMe.enabled)
   const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
   const [formError, setFormError] = useState('')
-  const [unverified, setUnverified] = useState(false)
   useLiveValidation(SCHEMA, values, errors, setErrors)
 
   const submit = async (e) => {
@@ -34,7 +34,6 @@ export default function Login() {
     if (Object.keys(errs).length) return
     setLoading(true)
     setFormError('')
-    setUnverified(false)
     // Must be set BEFORE sign-in so the session is written to the right storage
     rememberMe.set(remember, values.email)
     try {
@@ -43,19 +42,9 @@ export default function Login() {
       const from = location.state?.from?.pathname
       navigate(from && from !== '/login' ? from : '/dashboard', { replace: true })
     } catch (err) {
-      if (/Email not confirmed/i.test(err.message)) setUnverified(true)
       setFormError(getErrorMessage(err))
     } finally {
       setLoading(false)
-    }
-  }
-
-  const resend = async () => {
-    try {
-      await authService.resendVerification(values.email)
-      toast.success('Verification email sent')
-    } catch (err) {
-      toast.error(getErrorMessage(err))
     }
   }
 
@@ -63,14 +52,16 @@ export default function Login() {
     <div className="animate-fade-up">
       <h1 className="text-3xl font-extrabold tracking-tight text-navy-900">Sign in</h1>
       <p className="mt-2 text-sm text-ink-muted">
-        New to QURANDAZI? <Link to="/register" className="font-semibold text-gold-700 hover:underline">Create a free account</Link>
+        New to QURANDAZI? <Link to="/register" className="font-semibold text-gold-700 hover:underline">Create an account</Link>
       </p>
+      {registeredEmail && !formError && (
+        <Alert tone="success" className="mt-6" title="Your account has been created">
+          Sign in to open your dashboard, then complete your profile, verify your CNIC and make your deposit.
+        </Alert>
+      )}
       {formError && (
         <Alert tone="danger" className="mt-6">
           {formError}
-          {unverified && (
-            <button type="button" onClick={resend} className="ml-1 font-semibold underline">Resend verification email</button>
-          )}
         </Alert>
       )}
       <form onSubmit={submit} noValidate className="mt-6 space-y-5">

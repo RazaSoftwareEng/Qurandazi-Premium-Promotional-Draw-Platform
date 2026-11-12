@@ -40,7 +40,6 @@ export const CAMPAIGN_STATUSES = [
 ]
 
 export const RULE_TYPES = [
-  { value: 'email_verified', label: 'Verified email address', needsValue: false },
   { value: 'profile_complete', label: 'Complete profile (name, phone, address)', needsValue: false },
   { value: 'phone_required', label: 'Phone number on profile', needsValue: false },
   { value: 'min_account_age_days', label: 'Minimum account age (days)', needsValue: true, placeholder: 'e.g. 7' },

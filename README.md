@@ -32,13 +32,16 @@ If the env vars are missing, the app still renders and shows a yellow "Supabase 
    - `supabase/migrations/20260101000004_storage.sql`
    - `supabase/migrations/20260101000005_deposits_kyc.sql` (KYC, deposits, deposit-gated entries, prize handovers and the private storage buckets)
    - `supabase/migrations/20260101000006_wallet_payments_open_deposits.sql` (mobile-wallet payments; deposits can be submitted before KYC is complete)
+   - `supabase/migrations/20260101000007_disable_email_verification.sql` (no email verification: sign up, then sign in; activates existing unconfirmed accounts)
+   - `supabase/migrations/20260101000008_unique_email_phone.sql` (one account per email and per phone number; stops and lists any existing duplicates)
+   - `supabase/migrations/20260101000009_field_limits.sql` (name/phone/email limits enforced in the database)
    - `supabase/seed.sql` (adds the Grande / Alto / 125 categories, three sample campaigns and the site settings)
 
    With the Supabase CLI you can run `supabase link` and then `supabase db push` instead, followed by `psql … -f supabase/seed.sql`.
 3. **Configure Auth.** Under Authentication → URL Configuration:
    - Set **Site URL** to `http://localhost:5173` (your Vercel URL in production).
    - Add these **Redirect URLs**: `http://localhost:5173/auth/callback` and `http://localhost:5173/reset-password`, plus the same two paths on your production domain.
-   - Keep **Confirm email** enabled under Providers → Email.
+   - Turn **Confirm email** OFF under Sign In / Providers → Email. Members sign up, are sent to the login page and sign in straight away; identity is checked through CNIC (KYC) review instead.
 4. **Deploy the Edge Function.** It's used to add and delete users:
    ```bash
    supabase functions deploy admin-users

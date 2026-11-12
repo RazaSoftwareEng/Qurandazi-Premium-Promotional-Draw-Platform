@@ -81,7 +81,7 @@ export default function Contact() {
             </div>
           ) : (
             <form onSubmit={submit} noValidate className="grid gap-5 sm:grid-cols-2">
-              <FormInput label="Full name" placeholder="e.g. Ahmed Khan" required value={values.name} onChange={set('name')} error={errors.name} autoComplete="name" />
+              <FormInput label="Full name" maxLength={60} placeholder="e.g. Ahmed Khan" required value={values.name} onChange={set('name')} error={errors.name} autoComplete="name" />
               <FormInput label="Email" placeholder="you@example.com" type="email" required value={values.email} onChange={set('email')} error={errors.email} autoComplete="email" />
               <FormInput label="Subject" placeholder="What is your message about?" required className="sm:col-span-2" value={values.subject} onChange={set('subject')} error={errors.subject} />
               <TextArea label="Message" placeholder="Write your message (at least 10 characters)…" required rows={6} className="sm:col-span-2" value={values.message} onChange={set('message')} error={errors.message} maxLength={5000} />

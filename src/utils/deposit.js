@@ -19,6 +19,8 @@ export const PAYMENT_METHODS = [
   { value: 'payment_gateway', label: 'Payment gateway' },
 ]
 export const paymentMethodLabel = (v) => PAYMENT_METHODS.find((m) => m.value === v)?.label || v
+const SHORT = { mobile_wallet: 'Mobile wallet', bank_transfer: 'Bank transfer', payment_gateway: 'Payment gateway' }
+export const paymentMethodShort = (v) => SHORT[v] || paymentMethodLabel(v)
 
 /** "4210112345671" / "42101 1234567 1" -> "42101-1234567-1" (null if not 13 digits). */
 export function normalizeCnic(v) {

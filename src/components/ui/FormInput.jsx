@@ -24,14 +24,33 @@ function Field({ id, label, error, help, required, children, className = '' }) {
   )
 }
 
+// Safe default length limits per input type (an explicit maxLength prop wins)
+const DEFAULT_MAX = { text: 200, email: 254, password: 72, tel: 16, search: 100, url: 300 }
+
+/** Phone input: only digits, spaces, dashes and one leading "+". */
+export const sanitizePhone = (v) => {
+  const s = String(v || '').replace(/[^\d+\- ]/g, '')
+  return (s.startsWith('+') ? '+' : '') + s.replace(/\+/g, '')
+}
+
 /** Text-like input with label, validation message and optional leading icon / password toggle. */
 const FormInput = forwardRef(function FormInput(
-  { label, error, help, icon: Icon, type = 'text', className = '', inputClassName = '', required, ...rest },
+  { label, error, help, icon: Icon, type = 'text', className = '', inputClassName = '', required, maxLength, onChange, ...rest },
   ref,
 ) {
   const id = useId()
   const [show, setShow] = useState(false)
   const isPassword = type === 'password'
+  const isTel = type === 'tel'
+  const limit = maxLength ?? DEFAULT_MAX[type]
+  const handleChange =
+    isTel && onChange
+      ? (e) => {
+          const clean = sanitizePhone(e.target.value)
+          if (clean !== e.target.value) e.target.value = clean
+          onChange(e)
+        }
+      : onChange
   return (
     <Field id={id} label={label} error={error} help={help} required={required} className={className}>
       <div className="relative">
@@ -41,6 +60,9 @@ const FormInput = forwardRef(function FormInput(
           id={id}
           type={isPassword && show ? 'text' : type}
           required={required}
+          maxLength={limit}
+          onChange={handleChange}
+          {...(isTel ? { inputMode: 'tel' } : type === 'email' ? { inputMode: 'email', autoCapitalize: 'none', spellCheck: false } : {})}
           aria-invalid={Boolean(error) || undefined}
           aria-describedby={error ? `${id}-error` : help ? `${id}-help` : undefined}
           className={`input ${Icon ? 'pl-9' : ''} ${isPassword ? 'pr-10' : ''} ${error ? 'input-error' : ''} ${inputClassName}`}
@@ -61,7 +83,7 @@ const FormInput = forwardRef(function FormInput(
   )
 })
 
-export const TextArea = forwardRef(function TextArea({ label, error, help, className = '', rows = 4, required, ...rest }, ref) {
+export const TextArea = forwardRef(function TextArea({ label, error, help, className = '', rows = 4, required, maxLength = 2000, ...rest }, ref) {
   const id = useId()
   return (
     <Field id={id} label={label} error={error} help={help} required={required} className={className}>
@@ -70,6 +92,7 @@ export const TextArea = forwardRef(function TextArea({ label, error, help, class
         id={id}
         rows={rows}
         required={required}
+        maxLength={maxLength}
         aria-invalid={Boolean(error) || undefined}
         className={`input resize-y ${error ? 'input-error' : ''}`}
         {...rest}

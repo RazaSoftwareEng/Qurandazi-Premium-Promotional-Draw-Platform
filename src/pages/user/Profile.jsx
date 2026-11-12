@@ -14,8 +14,8 @@ import { getErrorMessage } from '@/utils/errors'
 import { formatDate } from '@/utils/format'
 
 const SCHEMA = {
-  full_name: [rules.required('Full name is required'), rules.min(2), rules.max(120)],
-  phone: [rules.phone()],
+  full_name: [rules.required('Full name is required'), rules.min(2), rules.max(60), rules.personName()],
+  phone: [rules.required('Phone number is required'), rules.mobilePK()],
   address: [rules.max(300)],
   city: [rules.max(80)],
 }
@@ -23,7 +23,7 @@ const fromProfile = (p) => ({ full_name: p?.full_name || '', phone: p?.phone || 
 
 export default function Profile() {
   useDocumentTitle('My Profile')
-  const { user, profile, setProfile, isEmailVerified } = useAuth()
+  const { user, profile, setProfile } = useAuth()
   const [values, setValues] = useState(fromProfile(profile))
   const [errors, setErrors] = useState({})
   const [saving, setSaving] = useState(false)
@@ -108,7 +108,6 @@ export default function Profile() {
           <h2 className="mt-4 text-lg font-bold text-navy-900">{profile?.full_name || 'Unnamed member'}</h2>
           <p className="text-sm text-ink-muted">{user.email}</p>
           <div className="mt-3 flex justify-center gap-2">
-            <Badge tone={isEmailVerified ? 'success' : 'warning'} dot>{isEmailVerified ? 'Email verified' : 'Email unverified'}</Badge>
             {profile?.kyc_status === 'verified' && <Badge tone="gold" dot>KYC Verified</Badge>}
             <Badge tone={profile?.status === 'active' ? 'info' : 'danger'} dot>{profile?.status}</Badge>
           </div>
@@ -123,10 +122,10 @@ export default function Profile() {
             {!editing && <Button variant="outline" size="sm" onClick={() => setEditing(true)}>Edit profile</Button>}
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
-            <FormInput label="Full name (as on CNIC)" placeholder="e.g. Ahmed Khan" required value={values.full_name} onChange={set('full_name')} error={errors.full_name} disabled={!editing || nameLocked} autoComplete="name" help={nameLocked ? 'Locked after CNIC submission. Contact support to change it.' : undefined} />
+            <FormInput label="Full name (as on CNIC)" maxLength={60} placeholder="e.g. Ahmed Khan" required value={values.full_name} onChange={set('full_name')} error={errors.full_name} disabled={!editing || nameLocked} autoComplete="name" help={nameLocked ? 'Locked after CNIC submission. Contact support to change it.' : undefined} />
             <FormInput label="Email" value={user.email} disabled help="Contact support to change your email." />
-            <FormInput label="Phone number" type="tel" placeholder="+92 300 1234567" value={values.phone} onChange={set('phone')} error={errors.phone} disabled={!editing} autoComplete="tel" />
-            <FormInput label="City" placeholder="e.g. Karachi" value={values.city} onChange={set('city')} error={errors.city} disabled={!editing} autoComplete="address-level2" />
+            <FormInput label="Phone number" required type="tel" placeholder="0300 1234567" value={values.phone} onChange={set('phone')} error={errors.phone} disabled={!editing} autoComplete="tel" />
+            <FormInput label="City" maxLength={80} placeholder="e.g. Karachi" value={values.city} onChange={set('city')} error={errors.city} disabled={!editing} autoComplete="address-level2" />
             <TextArea label="Address" placeholder="House / street, area, city" className="sm:col-span-2" rows={3} value={values.address} onChange={set('address')} error={errors.address} disabled={!editing} maxLength={300} />
           </div>
           {editing && (

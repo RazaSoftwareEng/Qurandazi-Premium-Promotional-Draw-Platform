@@ -57,7 +57,6 @@ export default function UserDetail() {
     ['Phone', u.phone || '—'],
     ['City', u.city || '—'],
     ['Address', u.address || '—'],
-    ['Email verified', u.email_confirmed_at ? formatDateTime(u.email_confirmed_at) : 'Not verified'],
     ['KYC', <span key="kyc" className="inline-flex flex-col items-end gap-1"><StatusBadge map={KYC_STATUS} value={u.kyc_status} />{u.kyc_status !== 'not_submitted' && <Link to="/admin/kyc" className="text-xs text-gold-700 hover:underline">KYC Reviews</Link>}</span>],
     ['CNIC', <span key="cnic" className="font-mono text-xs">{u.cnic || '—'}</span>],
     ['Deposits', <Link key="dep" to={`/admin/deposits`} className="text-gold-700 hover:underline">View in Deposits</Link>],

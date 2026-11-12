@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { KeyRound, LogOut, MailCheck, ShieldCheck, ShieldAlert } from 'lucide-react'
+import { KeyRound, LogOut, ShieldCheck, ShieldAlert } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { Badge, Button, ConfirmationDialog, FormInput } from '@/components/ui'
+import { Button, ConfirmationDialog, FormInput } from '@/components/ui'
 import PageHeader from '@/components/layout/PageHeader'
 import { useAuth } from '@/context/AuthContext'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
@@ -56,7 +56,7 @@ export function ChangePasswordCard() {
 }
 
 export function SecurityCard() {
-  const { user, isEmailVerified, signOut } = useAuth()
+  const { user, signOut } = useAuth()
   const [confirm, setConfirm] = useState(false)
   const [busy, setBusy] = useState(false)
 
@@ -74,15 +74,6 @@ export function SecurityCard() {
     }
   }
 
-  const resend = async () => {
-    try {
-      await authService.resendVerification(user.email)
-      toast.success('Verification email sent')
-    } catch (e) {
-      toast.error(getErrorMessage(e))
-    }
-  }
-
   return (
     <div className="card p-6">
       <h2 className="flex items-center gap-2 font-bold text-navy-900"><ShieldCheck className="h-5 w-5 text-gold-600" /> Account security</h2>
@@ -90,12 +81,6 @@ export function SecurityCard() {
         <div className="flex items-center justify-between py-3">
           <dt className="text-ink-muted">Email</dt>
           <dd className="font-semibold text-navy-900">{user.email}</dd>
-        </div>
-        <div className="flex items-center justify-between gap-3 py-3">
-          <dt className="text-ink-muted">Verification</dt>
-          <dd className="flex items-center gap-2">
-            {isEmailVerified ? <Badge tone="success" dot>Verified</Badge> : <><Badge tone="warning" dot>Unverified</Badge><Button size="sm" variant="ghost" icon={MailCheck} onClick={resend}>Resend</Button></>}
-          </dd>
         </div>
         <div className="flex items-center justify-between py-3">
           <dt className="text-ink-muted">Last sign-in</dt>

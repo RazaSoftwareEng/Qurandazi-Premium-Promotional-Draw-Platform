@@ -45,7 +45,7 @@ function CampaignForm({ open, onClose, campaign, initial, categories, onSaved })
       setSlugTouched(true)
     } else {
       setValues(EMPTY)
-      setRuleState({ email_verified: { on: true, value: '', description: '' } })
+      setRuleState({ profile_complete: { on: true, value: '', description: '' } })
       setSlugTouched(false)
     }
   }

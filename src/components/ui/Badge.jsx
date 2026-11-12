@@ -10,7 +10,7 @@ const TONES = {
 
 export default function Badge({ tone = 'neutral', dot = false, className = '', children }) {
   return (
-    <span className={`badge ${TONES[tone] || TONES.neutral} ${className}`}>
+    <span className={`badge whitespace-nowrap ${TONES[tone] || TONES.neutral} ${className}`}>
       {dot && <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden />}
       {children}
     </span>

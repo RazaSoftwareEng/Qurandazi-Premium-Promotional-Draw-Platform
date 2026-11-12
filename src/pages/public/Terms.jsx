@@ -13,7 +13,7 @@ export default function Terms() {
           <p>No fee is charged to enter a campaign. To join a campaign, you need a verified, refundable deposit for that campaign’s category or a higher one. A deposit is not a fee. It is paid only into the company account shown in your dashboard and returned under the deposit terms you accept before paying. Those terms state the amount, the lock-in period and the refund rules, and their version is recorded on your deposit.</p>
           <h2>2. Eligibility</h2>
           <ul>
-            <li>You must hold a registered account in good standing with a verified email address.</li>
+            <li>You must hold a registered account in good standing.</li>
             <li>You must complete your profile and pass identity verification (KYC) by submitting your CNIC. Only KYC-verified members can make deposits.</li>
             <li>You must have a verified, active deposit for the campaign’s category or a higher one. Individual campaigns may set additional requirements, shown on each campaign page.</li>
             <li>Staff and administrators are not eligible to participate.</li>

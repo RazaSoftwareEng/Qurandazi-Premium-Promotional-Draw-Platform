@@ -1,12 +1,26 @@
 export const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
 export const PHONE_RE = /^\+?[0-9][0-9 -]{6,19}$/
 
+/** Returns "03XXXXXXXXX" for a valid Pakistani mobile number, otherwise null. */
+export function normalizeMobilePK(v) {
+  let d = String(v || '').replace(/\D/g, '')
+  if (d.startsWith('0092')) d = d.slice(4)
+  else if (d.startsWith('92') && d.length === 12) d = d.slice(2)
+  if (d.length === 10 && d.startsWith('3')) d = `0${d}`
+  return /^03\d{9}$/.test(d) ? d : null
+}
+
 export const rules = {
   required: (msg = 'This field is required') => (v) =>
     v === null || v === undefined || String(v).trim() === '' ? msg : null,
   email: (msg = 'Enter a valid email address') => (v) => (!v || EMAIL_RE.test(String(v).trim()) ? null : msg),
   phone: (msg = 'Enter a valid phone number, e.g. +92 300 1234567') => (v) =>
     !v || PHONE_RE.test(String(v).trim()) ? null : msg,
+  /** Pakistani mobile: 03XXXXXXXXX, +92 3XX XXXXXXX, 923XXXXXXXXX (spaces/dashes allowed). */
+  mobilePK: (msg = 'Enter a valid Pakistani mobile number, e.g. 0300 1234567 or +92 300 1234567') => (v) =>
+    !v || normalizeMobilePK(v) ? null : msg,
+  personName: (msg = 'Use letters, spaces, dots, hyphens or apostrophes only') => (v) =>
+    !v || /^[\p{L}][\p{L} .'-]*$/u.test(String(v).trim()) ? null : msg,
   min: (n, msg) => (v) => (!v || String(v).trim().length >= n ? null : msg || `Must be at least ${n} characters`),
   max: (n, msg) => (v) => (!v || String(v).length <= n ? null : msg || `Must be ${n} characters or fewer`),
   password: () => (v) => {

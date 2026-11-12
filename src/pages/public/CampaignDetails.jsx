@@ -78,7 +78,7 @@ export default function CampaignDetails() {
               <li className="flex gap-2 text-sm text-ink-soft"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" /> A registered QURANDAZI account in good standing</li>
               {needsDeposit && (
                 <>
-                  <li className="flex gap-2 text-sm text-ink-soft"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" /> Verified email and KYC-verified identity (CNIC)</li>
+                  <li className="flex gap-2 text-sm text-ink-soft"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" /> KYC-verified identity (CNIC)</li>
                   <li className="flex gap-2 text-sm text-ink-soft"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" /> A verified, active {c.category.name} deposit ({formatPKR(c.category.deposit_amount)}) or higher that is still active when the campaign closes</li>
                 </>
               )}
@@ -97,7 +97,7 @@ export default function CampaignDetails() {
             <p className="whitespace-pre-line text-[15px] leading-7 text-ink-soft">
               {c.participation_instructions ||
                 (needsDeposit
-                  ? 'Verify your email, complete your profile and get your CNIC verified. Then make a refundable deposit in this category or a higher one. Once the deposit is verified, press “Join Campaign”.'
+                  ? 'Sign in, complete your profile and get your CNIC verified. Then make a refundable deposit in this category or a higher one. Once the deposit is verified, press “Join Campaign”.'
                   : 'Sign in, make sure you meet the eligibility requirements, then press “Join Campaign”.')}
             </p>
             {needsDeposit && (

@@ -15,7 +15,7 @@ import { formatDate, formatPKR, formatRelative } from '@/utils/format'
 
 export default function Overview() {
   useDocumentTitle('Dashboard')
-  const { user, profile, isEmailVerified } = useAuth()
+  const { user, profile } = useAuth()
   const firstName = profile?.full_name?.split(' ')[0] || 'there'
 
   const entries = useAsync(() => entryService.myRecent(user.id, 5), [user.id])
@@ -32,7 +32,6 @@ export default function Overview() {
   const pendingDeposit = (deposits.data || []).some((d) => d.status === 'pending')
   const kyc = profile?.kyc_status
   const steps = [
-    { done: isEmailVerified, label: 'Verify your email', hint: 'Check your inbox for the verification link.' },
     { done: profileComplete, label: 'Complete your profile', hint: 'Full name, phone and address.', to: '/dashboard/profile' },
     { done: kyc === 'verified', label: 'Get KYC verified', hint: kyc === 'pending' ? 'Your CNIC is under review.' : kyc === 'rejected' ? 'Your CNIC was rejected. Please resubmit it.' : 'Upload the front and back of your CNIC.', to: '/dashboard/profile' },
     { done: Boolean(active), label: 'Make a verified deposit', hint: pendingDeposit ? 'Your deposit is awaiting verification.' : 'Grande, Alto or 125. Refundable, never a fee.', to: '/dashboard/deposits' },
@@ -59,7 +58,7 @@ export default function Overview() {
       {!deposits.loading && !allDone && (
         <section className="card p-5">
           <h2 className="font-bold text-navy-900">Get ready to join campaigns</h2>
-          <ol className="mt-4 grid gap-3 md:grid-cols-4">
+          <ol className="mt-4 grid gap-3 md:grid-cols-3">
             {steps.map((st, i) => {
               const Icon = st.done ? CheckCircle2 : Circle
               const inner = (
@@ -87,7 +86,7 @@ export default function Overview() {
         <StatCard label="My entries" value={all.length} icon={ClipboardList} loading={history.loading} accent />
         <StatCard label="Awaiting results" value={pending} icon={Sparkles} loading={history.loading} />
         <StatCard label="Wins" value={wins} icon={Trophy} loading={history.loading} />
-        <StatCard label="Account" value={profile?.status === 'active' ? 'Active' : 'Suspended'} icon={UserCircle2} hint={isEmailVerified ? 'Email verified' : 'Email not verified'} />
+        <StatCard label="Account" value={profile?.status === 'active' ? 'Active' : 'Suspended'} icon={UserCircle2} hint={profile?.kyc_status === 'verified' ? 'KYC verified' : 'KYC not verified yet'} />
       </div>
 
       <section>

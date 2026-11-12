@@ -56,9 +56,6 @@ join public.categories c on c.slug = v.cat_slug
 on conflict (slug) do nothing;
 
 insert into public.eligibility_rules (campaign_id, rule_type, description)
-select id, 'email_verified', 'A verified email address is required' from public.campaigns where slug in ('grande-winter-showcase', 'alto-spring-rewards')
-on conflict (campaign_id, rule_type) do nothing;
-insert into public.eligibility_rules (campaign_id, rule_type, description)
 select id, 'profile_complete', 'Full name, phone number and address are required' from public.campaigns where slug = 'grande-winter-showcase'
 on conflict (campaign_id, rule_type) do nothing;
 

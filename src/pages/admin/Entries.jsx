@@ -90,7 +90,6 @@ export default function Entries() {
   const checks = viewing
     ? [
         ['Account active', p?.status === 'active'],
-        ['Email verified', Boolean(p?.email_confirmed_at)],
         ['Phone on profile', Boolean(p?.phone)],
         ['Entered before closing', new Date(viewing.created_at) <= new Date(viewing.campaign?.end_date)],
       ]

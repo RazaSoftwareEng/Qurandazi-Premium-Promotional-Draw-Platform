@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import {
   Banknote, Bell, BarChart3, ClipboardList, FileText, Gift, History, IdCard, Inbox, LayoutDashboard, Layers, Megaphone,
   ScrollText, Settings, Shuffle, Sparkles, Trophy, User, Users, Wallet,
@@ -28,7 +28,6 @@ const Login = lazy(() => import('@/pages/auth/Login'))
 const Register = lazy(() => import('@/pages/auth/Register'))
 const ForgotPassword = lazy(() => import('@/pages/auth/ForgotPassword'))
 const ResetPassword = lazy(() => import('@/pages/auth/ResetPassword'))
-const VerifyEmail = lazy(() => import('@/pages/auth/VerifyEmail'))
 const AuthCallback = lazy(() => import('@/pages/auth/AuthCallback'))
 // User
 const UserOverview = lazy(() => import('@/pages/user/Overview'))
@@ -149,7 +148,7 @@ export default function AppRoutes() {
             <Route path="forgot-password" element={<ForgotPassword />} />
           </Route>
           <Route path="reset-password" element={<ResetPassword />} />
-          <Route path="verify-email" element={<VerifyEmail />} />
+          <Route path="verify-email" element={<Navigate to="/login" replace />} />
           <Route path="auth/callback" element={<AuthCallback />} />
         </Route>
 

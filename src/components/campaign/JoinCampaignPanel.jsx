@@ -59,7 +59,7 @@ export default function JoinCampaignPanel({ campaign, onJoined, compact = false 
       <>
         <p className="text-sm text-ink-muted">
           Sign in or create an account to join this campaign.
-          {required > 0 && ' You will need a verified identity (CNIC) and a verified deposit.'}
+          {required > 0 && ' You will need a KYC-verified CNIC and a verified deposit.'}
         </p>
         <div className="mt-4 grid gap-2 sm:grid-cols-2">
           <Button to="/login" state={{ from: location }} variant="navy">Sign in</Button>

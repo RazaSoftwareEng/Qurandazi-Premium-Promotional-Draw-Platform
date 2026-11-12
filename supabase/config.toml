@@ -23,7 +23,7 @@ enable_signup = true
 
 [auth.email]
 enable_signup = true
-enable_confirmations = true
+enable_confirmations = false
 double_confirm_changes = true
 
 # Branded email templates (for the hosted project, paste the same HTML into

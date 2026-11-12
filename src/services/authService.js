@@ -8,10 +8,16 @@ export const authService = {
         password,
         options: {
           data: { full_name: full_name.trim(), phone: phone?.trim() || null },
-          emailRedirectTo: `${SITE_URL}/auth/callback`,
         },
       }),
     )
+  },
+
+  /** True if no other account uses this phone number (normalised server-side). */
+  async isPhoneAvailable(phone) {
+    const { data, error } = await supabase.rpc('is_phone_available', { p_phone: phone })
+    if (error) return true // check unavailable (e.g. migration not run yet): let the database decide
+    return data !== false
   },
 
   async signIn({ email, password }) {
@@ -40,16 +46,6 @@ export const authService = {
     const { error } = await supabase.auth.signInWithPassword({ email, password: currentPassword })
     if (error) throw new Error('Your current password is incorrect.')
     return unwrap(await supabase.auth.updateUser({ password: newPassword }))
-  },
-
-  async resendVerification(email) {
-    return unwrap(
-      await supabase.auth.resend({
-        type: 'signup',
-        email: email.trim().toLowerCase(),
-        options: { emailRedirectTo: `${SITE_URL}/auth/callback` },
-      }),
-    )
   },
 
   async signOutEverywhere() {

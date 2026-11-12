@@ -49,7 +49,6 @@ export default function KycReviews() {
   const v = viewing
   const checks = v
     ? [
-        ['Email verified', Boolean(v.email_confirmed_at)],
         ['Account active', v.status === 'active'],
         ['Phone & address on profile', Boolean(v.phone && v.address)],
         ['Both CNIC images uploaded', Boolean(v.cnic_front_path && v.cnic_back_path)],

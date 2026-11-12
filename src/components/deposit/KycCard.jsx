@@ -10,7 +10,7 @@ import { getErrorMessage } from '@/utils/errors'
 
 /** Step 1 of the deposit flow: CNIC number + front/back images, reviewed by an admin. */
 export default function KycCard() {
-  const { user, profile, isEmailVerified, refreshProfile } = useAuth()
+  const { user, profile, refreshProfile } = useAuth()
   const [cnic, setCnic] = useState('')
   const [front, setFront] = useState(null)
   const [back, setBack] = useState(null)
@@ -74,11 +74,10 @@ export default function KycCard() {
           <p className="mb-4 text-sm text-ink-muted">
             Only KYC-verified members can make deposits. Your full name must match your CNIC exactly. Your CNIC images are stored privately and seen only by our verification team.
           </p>
-          {!isEmailVerified || !profileComplete ? (
+          {!profileComplete ? (
             <Alert tone="info" title="Before you submit">
               <ul className="list-disc space-y-0.5 pl-4">
-                {!isEmailVerified && <li>Verify your email address.</li>}
-                {!profileComplete && <li>Complete your full name, phone number and address above.</li>}
+                <li>Complete your full name, phone number and address above.</li>
               </ul>
             </Alert>
           ) : (
